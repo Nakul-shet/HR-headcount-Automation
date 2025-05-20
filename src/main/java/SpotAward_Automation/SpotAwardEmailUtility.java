@@ -11,7 +11,7 @@ import java.util.Properties;
 public class SpotAwardEmailUtility {
 
     public static void sendEmail(String [] recipients, String sender, String subject, String body, String attachmentPath) {
-        final String password = "";
+        final String password = "N@!@#$kuLk09";
 
         Properties properties = System.getProperties();
         properties.setProperty("mail.smtp.host", "ismtp.allegisgroup.com");

@@ -14,9 +14,19 @@ import java.util.Locale;
 
 public class SpotAwardTestCase {
 
+    private static final double ELIGIBILITY_PERCENTAGE = 0.02;
+    private static final String HEADCOUNT_DATA_FILENAME = "head_count_excel.xls";
+    private static final String HEADCOUNT_DATE_TABLE_NAME = "New Org Headcount";
+    private static final String SPOT_AWARD_FORMAT_FILE = "SPOT Format.xls";
+
     public static String getCurrentMonthName() {
         LocalDate currentDate = LocalDate.now();
         return currentDate.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+    }
+
+    public static int getCurrentYear() {
+        LocalDate currentDate = LocalDate.now();
+        return currentDate.getYear();
     }
 
     public static void main(String[] args) {
@@ -29,7 +39,7 @@ public class SpotAwardTestCase {
         String emailBody = "";
 
         try {
-            File file = new File("head_count_excel.xls");
+            File file = new File(HEADCOUNT_DATA_FILENAME);
             Workbook workbook = Workbook.getWorkbook(file);
             Sheet sheet = workbook.getSheet(1);
 
@@ -39,7 +49,7 @@ public class SpotAwardTestCase {
             // Step 1: Find the merged cell with "New Org Headcount"
             for (Range range : sheet.getMergedCells()) {
                 Cell topLeft = range.getTopLeft();
-                if (topLeft.getContents().trim().equalsIgnoreCase("New Org Headcount")) {
+                if (topLeft.getContents().trim().equalsIgnoreCase(HEADCOUNT_DATE_TABLE_NAME)) {
                     mergedCellRow = topLeft.getRow();
                     mergedCellCol = topLeft.getColumn();
                     break;
@@ -79,24 +89,39 @@ public class SpotAwardTestCase {
 
             StringBuilder htmlBuilder = new StringBuilder();
             htmlBuilder.append("<html><body>");
-            htmlBuilder.append("<h5>Spot Award Eligibility</h5>");
-            htmlBuilder.append("<p>Below mentioned are the <b>SPOT award Eligibility </b>for the month of ").append(getCurrentMonthName()).append(" 2025 </p>");
-            htmlBuilder.append("<p>Kindly share the nominations in the <b>attached format only</b> as per the <b>New Org</b> on or before 28 ").append(getCurrentMonthName()).append(" 2025 </p>");
-            htmlBuilder.append("<table border='1' style='border-collapse: collapse; width: 100%;'>");
-            htmlBuilder.append("<tr style='background-color:yellow'><th>New Org</th><th>Headcount</th><th>Eligibility</th></tr>");
+            htmlBuilder.append("<p>Dear All,</p>");
+            htmlBuilder.append("<p>Below mentioned are the <b>SPOT award Eligibility </b>for the month of ")
+                    .append(getCurrentMonthName()).append(" ").append(getCurrentYear()).append("</p>");
+            htmlBuilder.append("<p>Kindly share the nominations in the <b>attached format only</b> as per the <b>New Org</b> on or before 28 ")
+                    .append(getCurrentMonthName()).append(" ").append(getCurrentYear()).append("</p>");
+            htmlBuilder.append("<table border='1' style='border-collapse: collapse; width: 100%; border-width: 2px;'>");
+            htmlBuilder.append("<tr style='background-color:yellow'>");
+            htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>New Org</th>");
+            htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>Headcount</th>");
+            htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>")
+                    .append(getCurrentMonthName()).append(" ").append(getCurrentYear()).append(" Eligibility</th>");
+            htmlBuilder.append("</tr>");
 
             for (int row = dataStartRow; row < sheet.getRows(); row++) {
                 String department = sheet.getCell(0, row).getContents().trim();
                 String countStr = sheet.getCell(latestCol, row).getContents().trim();
-                int twoPercent = (int) Math.ceil(Integer.parseInt(countStr) * 0.02);
+                int twoPercent = (int) Math.ceil(Integer.parseInt(countStr) * ELIGIBILITY_PERCENTAGE);
 
                 if (department.isEmpty() && countStr.isEmpty()) break;
 
                 try {
                     int headCount = Integer.parseInt(countStr);
-                    htmlBuilder.append(String.format("<tr><td>%s</td><td>%d</td><td>%d</td></tr>", department, headCount, twoPercent));
+                    htmlBuilder.append(String.format(
+                            "<tr><td style='padding-left: 10px; border: 2px solid black;'>%s</td>" +
+                                    "<td style='padding-left: 10px; border: 2px solid black;'>%d</td>" +
+                                    "<td style='padding-left: 10px; border: 2px solid black;'>%d</td></tr>",
+                            department, headCount, twoPercent));
                 } catch (NumberFormatException e) {
-                    htmlBuilder.append(String.format("<tr><td>%s</td><td>Invalid</td><td>N/A</td></tr>", department));
+                    htmlBuilder.append(String.format(
+                            "<tr><td style='padding-left: 10px; border: 2px solid black;'>%s</td>" +
+                                    "<td style='padding-left: 10px; border: 2px solid black;'>Invalid</td>" +
+                                    "<td style='padding-left: 10px; border: 2px solid black;'>N/A</td></tr>",
+                            department));
                 }
             }
 
@@ -114,16 +139,18 @@ public class SpotAwardTestCase {
 
         String[] recipients =
                 {
-                    "nshet@teksystems.com",
                     "kmk@teksystems.com",
+                    "susk@teksystems.com",
                     "aytiwari@teksystems.com",
                     "dmaddala@teksystems.com",
-                    "shati@teksystems.com"
+                    "shati@teksystems.com",
+                    "sumanvekar@teksystems.com",
+                    "raakki@teksystems.com",
+                    "nshet@teksystems.com",
                 };
-        String sender = "";
-        String subject = "Spot Award Eligibility";
-        String attachmentPath = "spot-award-format.xls";
+        String sender = "nshet@tekystems.com";
+        String subject = "Spot Awards " + getCurrentMonthName() + " " + getCurrentYear();
 
-        SpotAwardEmailUtility.sendEmail(recipients, sender, subject, emailBody, attachmentPath);
+        SpotAwardEmailUtility.sendEmail(recipients, sender, subject, emailBody, SPOT_AWARD_FORMAT_FILE);
     }
 }
