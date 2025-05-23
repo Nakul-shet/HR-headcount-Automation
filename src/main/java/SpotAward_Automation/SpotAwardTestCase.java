@@ -146,6 +146,10 @@ public class SpotAwardTestCase {
                     "shati@teksystems.com",
                     "sumanvekar@teksystems.com",
                     "raakki@teksystems.com",
+                    "kshafiuddin@teksystems.com",
+                    "spolegar@teksystems.com",
+                    "snayak@teksystems.com",
+                    "vsada@teksystems.com",
                     "nshet@teksystems.com",
                 };
         String sender = "nshet@tekystems.com";
