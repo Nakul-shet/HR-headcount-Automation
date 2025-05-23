@@ -152,7 +152,7 @@ public class SpotAwardTestCase {
                     "vsada@teksystems.com",
                     "nshet@teksystems.com",
                 };
-        String sender = "nshet@tekystems.com";
+        String sender = "";
         String subject = "Spot Awards " + getCurrentMonthName() + " " + getCurrentYear();
 
         SpotAwardEmailUtility.sendEmail(recipients, sender, subject, emailBody, SPOT_AWARD_FORMAT_FILE);
