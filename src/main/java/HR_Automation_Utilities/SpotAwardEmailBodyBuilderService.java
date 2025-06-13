@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -217,17 +218,32 @@ public class SpotAwardEmailBodyBuilderService {
 
     public static String buildEmployeeConfirmationEmailBody(){
 
+        LocalDate today = LocalDate.now();
+        LocalDate statementDate = LocalDate.of(today.getYear(), today.getMonth(), 8);
+        String formattedStatementDate = statementDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+
         StringBuilder htmlBuilder = new StringBuilder();
 
         htmlBuilder.append("<html><body>");
-        htmlBuilder.append("<p>Hi,</p>");
-        htmlBuilder.append("<b>Just a Reminder</b>");
 
-        htmlBuilder.append("Please confirm that you have received 1K  ")
+        htmlBuilder.append("Dear All,<br><br>")
+                .append("Hope you are doing good!<br><br>")
+                .append("<b><span style='color:blue'>Congratulations</span></b> on winning a SPOT award for <b>")
                 .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
                 .append(" ")
                 .append(java.time.LocalDate.now().getYear())
-                .append("</p>");
+                .append("</b>!<br><br>")
+                .append("The award amount of 1K has been credited to your Salary Account. ")
+                .append("<b>It will take 24 hours to reflect in your bank account. Please check the bank statement accordingly</b> ")
+                .append("and revert in case of any discrepancies on or after <b>")
+                .append(formattedStatementDate)
+                .append("</b>.<br><br>")
+                .append("<b>Note:</b><br>")
+                .append("1. Reach out to your reporting manager/ L1 managers for the award certificates.<br>")
+                .append("2. The SPOT awards certificates are shared with L1 Managers for your RMs reference.<br>")
+                .append("3. Post the certificate in LinkedIn and tag <b>TEKsystems Global Services In India</b>.<br>")
+                .append("4. Amount is not included in the salary; it is credited to your salary account separately. ")
+                .append("For additional credit related queries, contact <a href='mailto:kiskala@teksystems.com'>kiskala@teksystems.com</a>.<br>");
 
         htmlBuilder.append("</div>");
         htmlBuilder.append(getEmailSignature());
@@ -235,7 +251,6 @@ public class SpotAwardEmailBodyBuilderService {
 
         htmlBuilder.append("</body></html>");
         return htmlBuilder.toString();
-
     }
 
     private static String getEmailSignature() {
