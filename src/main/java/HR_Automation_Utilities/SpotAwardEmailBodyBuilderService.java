@@ -4,9 +4,9 @@ import jxl.Cell;
 import jxl.Range;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.read.biff.BiffException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -251,6 +251,34 @@ public class SpotAwardEmailBodyBuilderService {
 
         htmlBuilder.append("</body></html>");
         return htmlBuilder.toString();
+    }
+
+    public static String[] getSpotAwardWinnersEmail() throws BiffException, IOException {
+        File file = new File(SpotAwardConfig.FINANCE_DATA_FILENAME);
+        Workbook workbook = Workbook.getWorkbook(file);
+        Sheet sheet = workbook.getSheet(0);
+        int mailIdColumn = -1;
+        Cell[] headerRow = sheet.getRow(0);
+        for (int i = 0; i < headerRow.length; i++) {
+            if (headerRow[i].getContents().equalsIgnoreCase("Mailid")) {
+                mailIdColumn = i;
+                break;
+            }
+        }
+        if (mailIdColumn == -1) {
+            System.out.println("Mailid column not found.");
+        }
+        List<String> emailList = new ArrayList<>();
+        for (int row = 1; row < sheet.getRows(); row++) {
+            Cell cell = sheet.getCell(mailIdColumn, row);
+            String email = cell.getContents().trim();
+            if (!email.isEmpty()) {
+                emailList.add(email);
+            }
+        }
+        workbook.close();
+        String[] emailArray = emailList.toArray(new String[0]);
+        return emailArray;
     }
 
     private static String getEmailSignature() {
