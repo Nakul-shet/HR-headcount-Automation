@@ -1,16 +1,23 @@
-package SpotAward_Automation2;
+package HR_Automation_Utilities;
 
 import jxl.Cell;
 import jxl.Range;
 import jxl.Sheet;
 import jxl.Workbook;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.Locale;
 
-public class SpotAwardEligibilityService {
+public class SpotAwardEmailBodyBuilderService {
     public static String buildEligibilityEmailBody() throws Exception {
         File file = new File(SpotAwardConfig.HEADCOUNT_DATA_FILENAME);
         Workbook workbook = Workbook.getWorkbook(file);
@@ -53,7 +60,7 @@ public class SpotAwardEligibilityService {
                 .append(" ")
                 .append(java.time.LocalDate.now().getYear())
                 .append("</p>");
-        htmlBuilder.append("<p>Kindly share the nominations in the <b>attached format only</b> as per the <b>New Org</b> on or before 28 ")
+        htmlBuilder.append("<p>Kindly share the nominations as per the <b>New Org</b> structure by clicking the <b>Nominate Employees</b> button below, on or before 28 ")
                 .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
                 .append(" ")
                 .append(java.time.LocalDate.now().getYear())
@@ -117,33 +124,138 @@ public class SpotAwardEligibilityService {
         return htmlBuilder.toString();
     }
 
+    public static String buildReminderEmailBody() throws Exception {
+
+        StringBuilder htmlBuilder = new StringBuilder();
+
+        htmlBuilder.append("<html><body>");
+        htmlBuilder.append("<p>Hi All,</p>");
+        htmlBuilder.append("<b>Just a Reminder</b>");
+
+        htmlBuilder.append("<p>Kindly share the nominations as per the <b>New Org</b> structure by clicking the <b>Nominate Employees</b> button below, on or before 28 ")
+                .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
+                .append(" ")
+                .append(java.time.LocalDate.now().getYear())
+                .append("</p>");
+
+        htmlBuilder.append("<a href='")
+                .append(SpotAwardConfig.SHAREPOINT_LINK)
+                .append("' style='display: inline-block; ")
+                .append("background-color: #0066cc; ")
+                .append("color: white; ")
+                .append("padding: 12px 25px; ")
+                .append("text-decoration: none; ")
+                .append("border-radius: 5px; ")
+                .append("font-weight: bold; ")
+                .append("margin: 10px 0;'>")
+                .append("Nominate Employees")
+                .append("</a>");
+
+        htmlBuilder.append("</div>");
+        htmlBuilder.append(getEmailSignature());
+        htmlBuilder.append("</div>");
+
+        htmlBuilder.append("</body></html>");
+        return htmlBuilder.toString();
+
+    }
+
+    public static String buildFinanceEmailBody() throws Exception {
+        File file = new File(SpotAwardConfig.FINANCE_DATA_FILENAME);
+
+        String monthYear = LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+                + " " + LocalDate.now().getYear();
+
+        List<List<String>> tableData = readExcelData(file);
+        String htmlTable = generateHtmlTable(tableData);
+
+        StringBuilder body = new StringBuilder();
+
+        body.append("Hi Kishore,<br><br>")
+                .append("Please credit the Spot Award Amount for the below mentioned Employees. ")
+                .append("This is approved by the respective Practice Head for <b>")
+                .append(monthYear)
+                .append("</b>.<br><br>")
+                .append("Please do confirm once done.<br><br>")
+                .append(htmlTable)
+                .append("<br>")
+                .append(getEmailSignature());
+
+        return body.toString();
+    }
+
+    private static List<List<String>> readExcelData(File file) throws Exception {
+        List<List<String>> data = new ArrayList<>();
+        Workbook workbook = Workbook.getWorkbook(file);
+        Sheet sheet = workbook.getSheet(0);
+
+        for (int row = 0; row < sheet.getRows(); row++) {
+            List<String> rowData = new ArrayList<>();
+            for (int col = 0; col < sheet.getColumns(); col++) {
+                Cell cell = sheet.getCell(col, row);
+                rowData.add(cell.getContents());
+            }
+            data.add(rowData);
+        }
+        workbook.close();
+        return data;
+    }
+
+    private static String generateHtmlTable(List<List<String>> tableData) {
+        StringBuilder table = new StringBuilder("<table border='1' cellspacing='0' cellpadding='5'>");
+
+        for (int i = 0; i < tableData.size(); i++) {
+            table.append("<tr>");
+            for (String cell : tableData.get(i)) {
+                table.append(i == 0 ? "<th>" : "<td>").append(cell).append(i == 0 ? "</th>" : "</td>");
+            }
+            table.append("</tr>");
+        }
+        table.append("</table>");
+        return table.toString();
+    }
+
+    public static String buildEmployeeConfirmationEmailBody(){
+
+        StringBuilder htmlBuilder = new StringBuilder();
+
+        htmlBuilder.append("<html><body>");
+        htmlBuilder.append("<p>Hi,</p>");
+        htmlBuilder.append("<b>Just a Reminder</b>");
+
+        htmlBuilder.append("Please confirm that you have received 1K  ")
+                .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
+                .append(" ")
+                .append(java.time.LocalDate.now().getYear())
+                .append("</p>");
+
+        htmlBuilder.append("</div>");
+        htmlBuilder.append(getEmailSignature());
+        htmlBuilder.append("</div>");
+
+        htmlBuilder.append("</body></html>");
+        return htmlBuilder.toString();
+
+    }
+
     private static String getEmailSignature() {
         return new StringBuilder()
                 .append("<div style='border-top: 1px solid #cccccc; padding-top: 15px; margin-top: 20px;'>")
-                .append("<p style='margin: 0; line-height: 1.5;'>Thanks and Regards,</p>")
-                .append("<p style='margin: 5px 0; line-height: 1.5;'>")
-                .append("<strong>Karthik M K</strong> | Associate Engineer | Global Engineering Application Hub")
-                .append("</p>")
-                .append("<p style='margin: 5px 0; line-height: 1.5;'>")
-                .append("M: <a href='tel:+918078254741' style='color: #0066cc; text-decoration: none;'>+91 8078254741</a>")
-                .append("</p>")
-                .append("<p style='margin: 5px 0; line-height: 1.5;'><strong>Office:</strong> TEKsystems Global Services Pvt. Ltd.</p>")
-                .append("<p style='margin: 5px 0; line-height: 1.5;'>#801, 8B, 8th Floor, Arliga Ecoworld Campus (earlier - RMZ Ecoworld)<br>")
-                .append("Outer Ring Road, Devarabeesanahalli<br>")
-                .append("Bengaluru - 560 103.</p>")
-                .append("<p style='margin: 5px 0; line-height: 1.5;'>")
-                .append("Email: <a href='mailto:kmk@teksystems.com' style='color: #0066cc; text-decoration: none;'>kmk@teksystems.com</a>")
-                .append("</p>")
+                .append("<p style='margin: 0; line-height: 1.5;'>Thanks & Regards,</p>")
+                .append("<p style='margin: 5px 0; line-height: 1.5;'><strong>TGS India HR</strong></p>")
                 .append("<img src='data:image/png;base64,")
-                .append(getBase64Image())
-                .append("' alt='Company Logo' style='width: 300px; height: 50px; margin-bottom: 10px;'><br>")
+                .append(getBase64Image("/src/main/resources/signature/TGSSignature1.jpg"))
+                .append("' alt='Company Logo' style='width: 350px; height: 50px; margin-bottom: 5px;'><br>")
+                .append("<img src='data:image/png;base64,")
+                .append(getBase64Image("/src/main/resources/signature/TGSSignature2.png"))
+                .append("' alt='Company Logo' style='width: 350px; height: 26px; margin-bottom: 10px;'><br>")
                 .append("</div>")
                 .toString();
     }
 
-    private static String getBase64Image() {
+    private static String getBase64Image(String imagePathLocation) {
         try {
-            String imagePath = System.getProperty("user.dir") + "/src/main/resources/signature/TGSSignature.png";
+            String imagePath = System.getProperty("user.dir") + imagePathLocation;
             byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
             return Base64.getEncoder().encodeToString(imageBytes);
         } catch (IOException e) {

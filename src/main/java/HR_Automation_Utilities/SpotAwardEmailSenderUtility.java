@@ -1,14 +1,14 @@
-package SpotAward_Automation2;
+package HR_Automation_Utilities;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.util.Arrays;
 import java.util.Properties;
 
-public class SpotAwardEmailUtility {
+public class SpotAwardEmailSenderUtility {
 
     public static void sendEmail(String [] recipients, String sender, String subject, String body) {
         final String password = SpotAwardConfig.SENDER_PASSWORD;
