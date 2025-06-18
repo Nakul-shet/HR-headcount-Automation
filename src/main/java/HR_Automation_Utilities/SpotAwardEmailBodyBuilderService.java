@@ -80,7 +80,7 @@ public class SpotAwardEmailBodyBuilderService {
                 .append("Nominate Employees")
                 .append("</a>");
 
-        htmlBuilder.append("<table border='1' style='border-collapse: collapse; width: 50%; border-width: 2px;'>");
+        htmlBuilder.append("<table border='1' style='border-collapse: collapse; width: 50%; border-width: 2px; text-align:center;'>");
         htmlBuilder.append("<tr style='background-color:yellow'>");
         htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>New Org</th>");
         //htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>Headcount</th>");
@@ -97,11 +97,6 @@ public class SpotAwardEmailBodyBuilderService {
             try {
                 int headCount = Integer.parseInt(countStr);
                 int twoPercent = (int) Math.floor(headCount * SpotAwardConfig.ELIGIBILITY_PERCENTAGE);
-//                htmlBuilder.append(String.format(
-//                        "<tr><td style='padding-left: 10px; border: 2px solid black;'>%s</td>" +
-//                                "<td style='padding-left: 10px; border: 2px solid black;'>%d</td>" +
-//                                "<td style='padding-left: 10px; border: 2px solid black;'>%d</td></tr>",
-//                        department, headCount, twoPercent));
                 htmlBuilder.append(String.format(
                         "<tr><td style='padding-left: 10px; border: 2px solid black;'>%s</td>" +
                                 "<td style='padding-left: 10px; border: 2px solid black;'>%d</td></tr>",
@@ -125,38 +120,73 @@ public class SpotAwardEmailBodyBuilderService {
         return htmlBuilder.toString();
     }
 
-    public static String buildReminderEmailBody() throws Exception {
+    public static String buildReminderEmailBody1() throws Exception {
 
         StringBuilder htmlBuilder = new StringBuilder();
 
         htmlBuilder.append("<html><body>");
-        htmlBuilder.append("<p>Hi All,</p>");
-        htmlBuilder.append("<b>Just a Reminder</b>");
+        htmlBuilder.append("<p>Dear Managers,</p>");
 
-        htmlBuilder.append("<p>Kindly share the nominations as per the <b>New Org</b> structure by clicking the <b>Nominate Employees</b> button below, on or before 28 ")
+        htmlBuilder.append("<p>This is your <b style='color : purple;'>gentle-but-not-so-gentle reminder</b> to submit those <b style='color : purple;'>SPOT Award Nominations</b> before 28 ")
                 .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
                 .append(" ")
                 .append(java.time.LocalDate.now().getYear())
                 .append("</p>");
 
-        htmlBuilder.append("<a href='")
-                .append(SpotAwardConfig.SHAREPOINT_LINK)
-                .append("' style='display: inline-block; ")
-                .append("background-color: #0066cc; ")
-                .append("color: white; ")
-                .append("padding: 12px 25px; ")
-                .append("text-decoration: none; ")
-                .append("border-radius: 5px; ")
-                .append("font-weight: bold; ")
-                .append("margin: 10px 0;'>")
-                .append("Nominate Employees")
-                .append("</a>");
+        htmlBuilder.append("<p>Don’t let those <b style='color : purple;'>silent rockstars go unnoticed</b>. It’s your chance to shine a light on your team’s awesomeness 🌟.</p>");
 
-        htmlBuilder.append("</div>");
+        htmlBuilder.append("<p>If you've already submitted, <b style='color : purple;'> you’re officially awesome </b> and can proudly ignore this message.</p>");
+
+        htmlBuilder.append("<p>If not – tick tock ⏰… recognition season is calling!</p>");
+
+        htmlBuilder.append("<p>Got questions or need help? Ping the ever-helpful folks at ")
+                .append("<b><a href='mailto:TGSHRIndiaOps@teksystems.com'>TGSHRIndiaOps@teksystems.com</a></b>")
+                .append("</p>")
+                .append("<p>Let the nominations roll in!</p>");
+
         htmlBuilder.append(getEmailSignature());
-        htmlBuilder.append("</div>");
-
         htmlBuilder.append("</body></html>");
+
+        return htmlBuilder.toString();
+
+    }
+
+    public static String buildReminderEmailBody2() throws Exception {
+
+        StringBuilder htmlBuilder = new StringBuilder();
+
+        htmlBuilder.append("<html><body>");
+        htmlBuilder.append("<p>Dear All,</p>");
+
+        htmlBuilder.append("<p>This is your <b>final, no-kidding, last-chance, curtain-call reminder</b> to submit your <b>SPOT Award nominations</b> before 28 ")
+            .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
+            .append(" ")
+            .append(java.time.LocalDate.now().getYear())
+            .append("</p>");
+
+        htmlBuilder.append("<p>The nomination window <b>slams shut</b> at the end of the day on 28 ")
+            .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
+            .append(" ")
+            .append(java.time.LocalDate.now().getYear())
+            .append("</p>");
+
+        htmlBuilder.append("After that, even puppy eyes or “I forgot” won’t work. 😅</p>");
+
+        htmlBuilder.append("<p><b>Still haven’t nominated?</b><br>");
+        htmlBuilder.append("Please don’t be that manager whose team says, “Recognition? Never heard of it.”</p>");
+
+        htmlBuilder.append("<p>Let’s not disappoint the unsung heroes quietly saving the day in your team!</p>");
+
+        htmlBuilder.append("<p><b>Already submitted?</b> You’re a legend – please ignore this email and go treat yourself to a coffee. ☕</p>");
+
+        htmlBuilder.append("<p>For any last-minute confusion or friendly SOS, reach out to the award-wielding champs at:<br>");
+        htmlBuilder.append("📧 <b><a href='mailto:TGSHRIndiaOps@teksystems.com'>TGSHRIndiaOps@teksystems.com</a></b></p>");
+
+        htmlBuilder.append("<p><b>Let’s make those nominations count</b> (before the HR ops team starts chasing you with memes)! 😄</p>");
+
+        htmlBuilder.append(getEmailSignature());
+        htmlBuilder.append("</body></html>");
+
         return htmlBuilder.toString();
 
     }
@@ -208,7 +238,7 @@ public class SpotAwardEmailBodyBuilderService {
         for (int i = 0; i < tableData.size(); i++) {
             table.append("<tr>");
             for (String cell : tableData.get(i)) {
-                table.append(i == 0 ? "<th>" : "<td>").append(cell).append(i == 0 ? "</th>" : "</td>");
+                table.append(i == 0 ? "<th style='background-color : yellow;'>" : "<td>").append(cell).append(i == 0 ? "</th>" : "</td>");
             }
             table.append("</tr>");
         }
@@ -288,10 +318,10 @@ public class SpotAwardEmailBodyBuilderService {
                 .append("<p style='margin: 5px 0; line-height: 1.5;'><strong>TGS India HR</strong></p>")
                 .append("<img src='data:image/png;base64,")
                 .append(getBase64Image("/src/main/resources/signature/TGSSignature1.jpg"))
-                .append("' alt='Company Logo' style='width: 350px; height: 50px; margin-bottom: 5px;'><br>")
+                .append("' alt='Company Logo' style='width: 510px; height: 55px; margin-bottom: 5px;'><br>")
                 .append("<img src='data:image/png;base64,")
                 .append(getBase64Image("/src/main/resources/signature/TGSSignature2.png"))
-                .append("' alt='Company Logo' style='width: 350px; height: 26px; margin-bottom: 10px;'><br>")
+                .append("' alt='Company Logo' style='width: 600px; height: 26px; margin-bottom: 10px;'><br>")
                 .append("</div>")
                 .toString();
     }

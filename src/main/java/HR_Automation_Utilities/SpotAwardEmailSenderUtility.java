@@ -5,6 +5,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -35,20 +39,68 @@ public class SpotAwardEmailSenderUtility {
             message.setSubject(subject);
 
             MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setContent(body, "text/html; charset=utf-8"); // Ensure the email body is sent as HTML content
-
-//            MimeBodyPart attachmentPart = new MimeBodyPart();
-//            DataSource source = new FileDataSource(attachmentPath);
-//            attachmentPart.setDataHandler(new DataHandler(source));
-//            attachmentPart.setFileName(source.getName());
+            textPart.setContent(body, "text/html; charset=utf-8");
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(textPart);
-            //multipart.addBodyPart(attachmentPart);
 
             message.setContent(multipart);
 
+//            boolean messageIdAvailable = false;
+//
+//            String messageId = null;
+//            try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/src/main/resources/message_id.txt"))) {
+//                messageId = reader.readLine();
+//                if (messageId != null && !messageId.isEmpty()) {
+//                    messageIdAvailable = true;
+//
+//                    message.setHeader("In-Reply-To", messageId);
+//                    message.setHeader("References", messageId);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            message.saveChanges();
+//
+//            Transport.send(message);
+//
+//            if(!messageIdAvailable){
+//                messageId = message.getMessageID();
+//                try (FileWriter writer = new FileWriter(System.getProperty("user.dir")+"/src/main/resources/message_id.txt")) {
+//                    writer.write(messageId);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
+            String messageId = null;
+            boolean messageIdAvailable = false;
+
+            try (BufferedReader reader = new BufferedReader(new FileReader("/var/jenkins_home/shared/message_id.txt"))) {
+                messageId = reader.readLine();
+                if (messageId != null && !messageId.isEmpty()) {
+                    messageIdAvailable = true;
+
+                    message.setHeader("In-Reply-To", messageId);
+                    message.setHeader("References", messageId);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            message.saveChanges();
             Transport.send(message);
+
+            if (!messageIdAvailable) {
+                messageId = message.getMessageID();
+                try (FileWriter writer = new FileWriter("/var/jenkins_home/shared/message_id.txt")) {
+                    writer.write(messageId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             System.out.println("Email sent successfully to " + Arrays.toString(recipients));
         } catch (MessagingException e) {
             e.printStackTrace();
