@@ -10,10 +10,10 @@ public class SpotAwardConfig {
     public static final String SHAREPOINT_LINK = "https://allegiscloud.sharepoint.com/teams/TEKGlobalServices-TGS_INDIA_HR/Shared%20Documents/Forms/AllItems.aspx?id=%2Fteams%2FTEKGlobalServices%2DTGS%5FINDIA%5FHR%2FShared%20Documents%2FTGS%20INDIA%20DATA%2FRewards%20and%20Recognition%20SharePoint%20Testing&p=true&ct=1748233367251&or=Teams%2DHL&ga=1&LOF=1";
     public static final String[] RECIPIENTS = {
        "kmk@teksystems.com",
-//        "susk@teksystems.com",
-//        "aytiwari@teksystems.com",
-//        "dmaddala@teksystems.com",
-//        "shati@teksystems.com",
+       "susk@teksystems.com",
+       "aytiwari@teksystems.com",
+       "dmaddala@teksystems.com",
+       "shati@teksystems.com",
 //        "sumanvekar@teksystems.com",
 //        "raakki@teksystems.com",
 //        "kshafiuddin@teksystems.com",
