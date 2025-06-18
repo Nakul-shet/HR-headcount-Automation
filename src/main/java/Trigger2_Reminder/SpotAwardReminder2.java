@@ -31,10 +31,11 @@ public class SpotAwardReminder2 {
                 emailBody
         );
 
-        clearMessageIdFile();
+        //clearMessageIdFileLocal();
+        clearMessageIdFileJenkins();
     }
 
-    public static void clearMessageIdFile() {
+    public static void clearMessageIdFileLocal() {
         String filePath = System.getProperty("user.dir") + "/src/main/resources/message_id.txt";
         try (FileWriter writer = new FileWriter(filePath, false)) {
             writer.write("");
@@ -43,5 +44,17 @@ public class SpotAwardReminder2 {
             e.printStackTrace();
         }
     }
+
+    public static void clearMessageIdFileJenkins() {
+        String filePath = "/var/jenkins_home/shared/message_id.txt";
+        try (FileWriter writer = new FileWriter(filePath, false)) {
+            writer.write("");
+            System.out.println("message_id.txt has been cleared.");
+        } catch (IOException e) {
+            System.err.println("Failed to clear message_id.txt");
+            e.printStackTrace();
+        }
+    }
+
 
 }
