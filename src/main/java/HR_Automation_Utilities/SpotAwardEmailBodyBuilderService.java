@@ -20,7 +20,7 @@ import java.util.Locale;
 
 public class SpotAwardEmailBodyBuilderService {
     public static String buildEligibilityEmailBody() throws Exception {
-        File file = new File(SpotAwardConfig.HEADCOUNT_DATA_FILENAME);
+        File file = new File("./DataFiles/" + SpotAwardConfig.HEADCOUNT_DATA_FILENAME);
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(1);
         int mergedCellRow = -1;
@@ -83,7 +83,6 @@ public class SpotAwardEmailBodyBuilderService {
         htmlBuilder.append("<table border='1' style='border-collapse: collapse; width: 50%; border-width: 2px; text-align:center;'>");
         htmlBuilder.append("<tr style='background-color:yellow'>");
         htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>New Org</th>");
-        //htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>Headcount</th>");
         htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>")
                 .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
                 .append(" ")
@@ -192,7 +191,7 @@ public class SpotAwardEmailBodyBuilderService {
     }
 
     public static String buildFinanceEmailBody() throws Exception {
-        File file = new File(SpotAwardConfig.FINANCE_DATA_FILENAME);
+        File file = new File("./DataFiles/" +SpotAwardConfig.FINANCE_DATA_FILENAME);
 
         String monthYear = LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH)
                 + " " + LocalDate.now().getYear();
@@ -248,8 +247,12 @@ public class SpotAwardEmailBodyBuilderService {
 
     public static String buildEmployeeConfirmationEmailBody(){
 
+
         LocalDate today = LocalDate.now();
-        LocalDate statementDate = LocalDate.of(today.getYear(), today.getMonth(), 8);
+        int nextMonth = today.getMonthValue() == 12 ? 1 : today.getMonthValue() + 1;
+        int year = today.getMonthValue() == 12 ? today.getYear() + 1 : today.getYear();
+        LocalDate statementDate = LocalDate.of(year, nextMonth, 8);
+
         String formattedStatementDate = statementDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
         StringBuilder htmlBuilder = new StringBuilder();
@@ -284,7 +287,7 @@ public class SpotAwardEmailBodyBuilderService {
     }
 
     public static String[] getSpotAwardWinnersEmail() throws BiffException, IOException {
-        File file = new File(SpotAwardConfig.FINANCE_DATA_FILENAME);
+        File file = new File("./DataFiles/" + SpotAwardConfig.FINANCE_DATA_FILENAME);
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(0);
         int mailIdColumn = -1;

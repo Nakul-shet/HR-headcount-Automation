@@ -5,6 +5,7 @@ import HR_Automation_Utilities.SpotAwardEmailBodyBuilderService;
 import HR_Automation_Utilities.SpotAwardEmailSenderUtility;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import jxl.read.biff.BiffException;
@@ -33,5 +34,19 @@ public class SpotAwardWinner {
                 subject,
                 emailBody
         );
+
+        if(SpotAwardConfig.runEnvironment.equals("local")){
+            clearMessageIdFileLocal();
+        }
+    }
+
+    public static void clearMessageIdFileLocal() {
+        String filePath = System.getProperty("user.dir") + "/src/main/resources/message_id.txt";
+        try (FileWriter writer = new FileWriter(filePath, false)) {
+            writer.write("");
+            System.out.println("message_id.txt has been cleared.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

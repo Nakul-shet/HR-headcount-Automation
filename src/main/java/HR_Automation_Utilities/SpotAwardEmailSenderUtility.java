@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Properties;
 
 public class SpotAwardEmailSenderUtility {
@@ -46,59 +47,73 @@ public class SpotAwardEmailSenderUtility {
 
             message.setContent(multipart);
 
-//            boolean messageIdAvailable = false;
-//
-//            String messageId = null;
-//            try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/src/main/resources/message_id.txt"))) {
-//                messageId = reader.readLine();
-//                if (messageId != null && !messageId.isEmpty()) {
-//                    messageIdAvailable = true;
-//
-//                    message.setHeader("In-Reply-To", messageId);
-//                    message.setHeader("References", messageId);
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            message.saveChanges();
-//
-//            Transport.send(message);
-//
-//            if(!messageIdAvailable){
-//                messageId = message.getMessageID();
-//                try (FileWriter writer = new FileWriter(System.getProperty("user.dir")+"/src/main/resources/message_id.txt")) {
-//                    writer.write(messageId);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+            String messageId;
+            boolean messageIdAvailable;
 
-            String messageId = null;
-            boolean messageIdAvailable = false;
+            switch(SpotAwardConfig.runEnvironment){
+                case "local":
+                    messageIdAvailable = false;
+                    messageId = null;
 
-            try (BufferedReader reader = new BufferedReader(new FileReader("/var/jenkins_home/shared/message_id.txt"))) {
-                messageId = reader.readLine();
-                if (messageId != null && !messageId.isEmpty()) {
-                    messageIdAvailable = true;
+                    try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/src/main/resources/message_id.txt"))) {
+                        messageId = reader.readLine();
+                        if (messageId != null && !messageId.isEmpty()) {
+                            messageIdAvailable = true;
 
-                    message.setHeader("In-Reply-To", messageId);
-                    message.setHeader("References", messageId);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                            message.setHeader("In-Reply-To", messageId);
+                            message.setHeader("References", messageId);
+                        }
+                        if(Objects.equals(messageId, "Expired")){
+                            messageIdAvailable = true;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-            message.saveChanges();
-            Transport.send(message);
+                    message.saveChanges();
 
-            if (!messageIdAvailable) {
-                messageId = message.getMessageID();
-                try (FileWriter writer = new FileWriter("/var/jenkins_home/shared/message_id.txt")) {
-                    writer.write(messageId);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    Transport.send(message);
+
+                    if(!messageIdAvailable){
+                        messageId = message.getMessageID();
+                        try (FileWriter writer = new FileWriter(System.getProperty("user.dir")+"/src/main/resources/message_id.txt")) {
+                            writer.write(messageId);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case "remote":
+                    messageId = null;
+                    messageIdAvailable = false;
+
+                    try (BufferedReader reader = new BufferedReader(new FileReader("/var/jenkins_home/shared/message_id.txt"))) {
+                        messageId = reader.readLine();
+                        if (messageId != null && !messageId.isEmpty()) {
+                            messageIdAvailable = true;
+
+                            message.setHeader("In-Reply-To", messageId);
+                            message.setHeader("References", messageId);
+                        }
+                        if(Objects.equals(messageId, "Expired")){
+                            messageIdAvailable = true;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    message.saveChanges();
+                    Transport.send(message);
+
+                    if (!messageIdAvailable) {
+                        messageId = message.getMessageID();
+                        try (FileWriter writer = new FileWriter("/var/jenkins_home/shared/message_id.txt")) {
+                            writer.write(messageId);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
             }
 
             System.out.println("Email sent successfully to " + Arrays.toString(recipients));
