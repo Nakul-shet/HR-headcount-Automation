@@ -1,4 +1,4 @@
-package Trigger4_SpotAwardWinner;
+package SpotAward.Trigger5_SpotAwardWinner;
 
 import HR_Automation_Utilities.SpotAwardConfig;
 import HR_Automation_Utilities.SpotAwardEmailBodyBuilderService;
