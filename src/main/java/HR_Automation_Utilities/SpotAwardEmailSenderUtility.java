@@ -15,7 +15,7 @@ import java.util.Properties;
 
 public class SpotAwardEmailSenderUtility {
 
-    public static void sendEmail(String [] recipients, String sender, String subject, String body) {
+    public static void sendEmail(String [] recipients,String [] ccRecipients , String sender, String subject, String body) {
         final String password = SpotAwardConfig.SENDER_PASSWORD;
 
         Properties properties = System.getProperties();
@@ -35,6 +35,12 @@ public class SpotAwardEmailSenderUtility {
             message.setFrom(new InternetAddress(sender));
             for (String recipient : recipients) {
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+            }
+
+            if(ccRecipients != null){
+                for (String ccRecipient : ccRecipients) {
+                    message.addRecipient(Message.RecipientType.CC, new InternetAddress(ccRecipient));
+                }
             }
 
             message.setSubject(subject);

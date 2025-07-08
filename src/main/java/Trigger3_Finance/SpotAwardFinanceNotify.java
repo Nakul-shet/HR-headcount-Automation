@@ -24,6 +24,7 @@ public class SpotAwardFinanceNotify {
         String subject = "Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
         SpotAwardEmailSenderUtility.sendEmail(
                 SpotAwardConfig.RECIPIENTS,
+                null,
                 sender,
                 subject,
                 emailBody

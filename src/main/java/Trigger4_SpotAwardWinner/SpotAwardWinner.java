@@ -30,6 +30,7 @@ public class SpotAwardWinner {
         String subject = "Finance Confirmation for Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
         SpotAwardEmailSenderUtility.sendEmail(
                 getSpotAwardWinnersEmail(),
+                null,
                 sender,
                 subject,
                 emailBody

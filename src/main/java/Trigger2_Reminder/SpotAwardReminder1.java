@@ -24,6 +24,7 @@ public class SpotAwardReminder1 {
         String subject = "Nominate or Regret! SPOT Award Reminder - Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
         SpotAwardEmailSenderUtility.sendEmail(
                 SpotAwardConfig.RECIPIENTS,
+                null,
                 sender,
                 subject,
                 emailBody

@@ -22,7 +22,7 @@ public class SpotAwardEmailBodyBuilderService {
     public static String buildEligibilityEmailBody() throws Exception {
         File file = new File("./DataFiles/" + SpotAwardConfig.HEADCOUNT_DATA_FILENAME);
         Workbook workbook = Workbook.getWorkbook(file);
-        Sheet sheet = workbook.getSheet(1);
+        Sheet sheet = workbook.getSheet(0);
         int mergedCellRow = -1;
         int mergedCellCol = -1;
         for (Range range : sheet.getMergedCells()) {
@@ -67,20 +67,29 @@ public class SpotAwardEmailBodyBuilderService {
                 .append(java.time.LocalDate.now().getYear())
                 .append("</p>");
 
-        htmlBuilder.append("<a href='")
+        htmlBuilder.append("<!--[if mso]>")
+                .append("<table border='0' cellpadding='0' cellspacing='0' width='100%' style='margin-bottom:30px;'><tr><td align='left'>")
+                .append("<v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='")
                 .append(SpotAwardConfig.SHAREPOINT_LINK)
-                .append("' style='display: inline-block; ")
-                .append("background-color: #0066cc; ")
-                .append("color: white; ")
-                .append("padding: 12px 25px; ")
-                .append("text-decoration: none; ")
-                .append("border-radius: 5px; ")
-                .append("font-weight: bold; ")
-                .append("margin: 10px 0;'>")
+                .append("' style='height:45px;v-text-anchor:middle;width:280px;' arcsize='10%' stroke='f' fillcolor='#0066cc'>")
+                .append("<w:anchorlock/>")
+                .append("<center style='color:#ffffff;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;'>")
                 .append("Nominate Employees")
-                .append("</a>");
+                .append("</center>")
+                .append("</v:roundrect>")
+                .append("</td></tr></table>")
+                .append("<![endif]-->")
+                .append("<!--[if !mso]><!-- -->")
+                .append("<table border='0' cellpadding='0' cellspacing='0' width='100%' style='margin-bottom:30px;'><tr><td align='left'>")
+                .append("<a href='").append(SpotAwardConfig.SHAREPOINT_LINK).append("' target='_blank' ")
+                .append("style='background-color:#0066cc;border-radius:5px;color:#ffffff;display:inline-block;font-family:Arial,sans-serif;")
+                .append("font-size:15px;font-weight:bold;line-height:45px;text-align:center;text-decoration:none;width:220px;'>")
+                .append("Nominate Employees")
+                .append("</a>")
+                .append("</td></tr></table>")
+                .append("<!--<![endif]-->");
 
-        htmlBuilder.append("<table border='1' style='border-collapse: collapse; width: 50%; border-width: 2px; text-align:center;'>");
+        htmlBuilder.append("<table border='1' style='border-collapse: collapse; width: 40%; border-width: 2px; text-align:center;'>");
         htmlBuilder.append("<tr style='background-color:yellow'>");
         htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>New Org</th>");
         htmlBuilder.append("<th style='padding-left: 10px; border: 2px solid black;'>")
@@ -321,10 +330,10 @@ public class SpotAwardEmailBodyBuilderService {
                 .append("<p style='margin: 5px 0; line-height: 1.5;'><strong>TGS India HR</strong></p>")
                 .append("<img src='data:image/png;base64,")
                 .append(getBase64Image("/src/main/resources/signature/TGSSignature1.jpg"))
-                .append("' alt='Company Logo' style='width: 510px; height: 55px; margin-bottom: 5px;'><br>")
+                .append("' alt='Company Logo' width='510' height='55' style='margin-bottom: 5px;'><br>")
                 .append("<img src='data:image/png;base64,")
                 .append(getBase64Image("/src/main/resources/signature/TGSSignature2.png"))
-                .append("' alt='Company Logo' style='width: 600px; height: 26px; margin-bottom: 10px;'><br>")
+                .append("' alt='Company Logo' width='600' height='26' style='margin-bottom: 10px;'><br>")
                 .append("</div>")
                 .toString();
     }

@@ -26,6 +26,7 @@ public class SpotAwardReminder2 {
         String subject = "Last Call: Don’t Ghost the Greats! Nominate Now! - Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
         SpotAwardEmailSenderUtility.sendEmail(
                 SpotAwardConfig.RECIPIENTS,
+                null,
                 sender,
                 subject,
                 emailBody

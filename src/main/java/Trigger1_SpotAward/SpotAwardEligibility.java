@@ -6,6 +6,7 @@ import HR_Automation_Utilities.SpotAwardEmailBodyBuilderService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Objects;
 
 public class SpotAwardEligibility {
     public static void main(String[] args) {
@@ -22,7 +23,10 @@ public class SpotAwardEligibility {
         String sender = SpotAwardConfig.SENDER_ID;
         String subject = "Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
         SpotAwardEmailSenderUtility.sendEmail(
+//            Objects.requireNonNull(SpotAwardConfig.getToEmailAddresses("to")),
+//            SpotAwardConfig.getToEmailAddresses("cc"),
             SpotAwardConfig.RECIPIENTS,
+            null,
             sender,
             subject,
             emailBody
