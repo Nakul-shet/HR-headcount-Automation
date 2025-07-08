@@ -1,4 +1,4 @@
-package SpotAward.Trigger3_Reminder;
+package SpotAward_Practice.Trigger3_Reminder;
 
 import HR_Automation_Utilities.SpotAwardConfig;
 import HR_Automation_Utilities.SpotAwardEmailSenderUtility;
