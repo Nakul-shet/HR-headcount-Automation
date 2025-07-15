@@ -15,7 +15,7 @@ import java.util.Properties;
 
 public class SpotAwardEmailSenderUtility {
 
-    public static void sendEmail(String [] recipients,String [] ccRecipients , String sender, String subject, String body) {
+    public static void sendEmail(String [] recipients,String [] ccRecipients , String sender, String subject, String body , String emailType) {
         final String password = SpotAwardConfig.SENDER_PASSWORD;
 
         Properties properties = System.getProperties();
@@ -61,7 +61,11 @@ public class SpotAwardEmailSenderUtility {
                     messageIdAvailable = false;
                     messageId = null;
 
-                    try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/src/main/resources/message_id.txt"))) {
+                    System.out.println(emailType);
+
+                    String path = "/src/main/resources/" + emailType + "_message_id.txt";
+
+                    try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + path))) {
                         messageId = reader.readLine();
                         if (messageId != null && !messageId.isEmpty()) {
                             messageIdAvailable = true;
@@ -82,18 +86,18 @@ public class SpotAwardEmailSenderUtility {
 
                     if(!messageIdAvailable){
                         messageId = message.getMessageID();
-                        try (FileWriter writer = new FileWriter(System.getProperty("user.dir")+"/src/main/resources/message_id.txt")) {
+                        try (FileWriter writer = new FileWriter(System.getProperty("user.dir") + path)) {
                             writer.write(messageId);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                     break;
-                case "remote":
+                case "jenkins":
                     messageId = null;
                     messageIdAvailable = false;
 
-                    try (BufferedReader reader = new BufferedReader(new FileReader("/var/jenkins_home/shared/message_id.txt"))) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader("/var/jenkins_home/shared/spot_practice_message_id.txt"))) {
                         messageId = reader.readLine();
                         if (messageId != null && !messageId.isEmpty()) {
                             messageIdAvailable = true;
@@ -113,7 +117,7 @@ public class SpotAwardEmailSenderUtility {
 
                     if (!messageIdAvailable) {
                         messageId = message.getMessageID();
-                        try (FileWriter writer = new FileWriter("/var/jenkins_home/shared/message_id.txt")) {
+                        try (FileWriter writer = new FileWriter("/var/jenkins_home/shared/spot_practice_message_id.txt")) {
                             writer.write(messageId);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -126,5 +130,25 @@ public class SpotAwardEmailSenderUtility {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String[] getToEmailBasedOnRunType(String runType , String orgTo){
+        String[] recepients = new String[0];
+        if (runType.equalsIgnoreCase("test")) {
+            recepients = SpotAwardConfig.RECIPIENTS;
+        }else if(SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")){
+            recepients = Objects.requireNonNull(ExcelUtilities.getToEmailAddresses(orgTo));
+        }
+        return recepients;
+    }
+
+    public static String[] getCCEmailBasedOnRunType(String runType , String orgCC){
+        String[] cc = new String[0];
+        if (runType.equalsIgnoreCase("test")) {
+            cc = null;
+        }else if(SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")){
+            cc = ExcelUtilities.getToEmailAddresses(orgCC);
+        }
+        return cc;
     }
 }

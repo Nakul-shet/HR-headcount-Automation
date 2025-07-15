@@ -5,6 +5,9 @@ import HR_Automation_Utilities.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getCCEmailBasedOnRunType;
+import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getToEmailBasedOnRunType;
+
 public class DistinguishedAwardPracticeEligibility {
     public static void main(String[] args) {
         PrintStream originalOut = System.out;
@@ -20,13 +23,12 @@ public class DistinguishedAwardPracticeEligibility {
         String sender = SpotAwardConfig.SENDER_ID;
         String subject = "Nominations for the Reward and Recognition (Distinguished Award) - Q" + CommonEmailBodyUtilities.getCurrentQuarter() + " " + java.time.LocalDate.now().getYear();
         SpotAwardEmailSenderUtility.sendEmail(
-//            Objects.requireNonNull(ExcelUtilities.getToEmailAddresses("prac-to")),
-//            ExcelUtilities.getToEmailAddresses("prac-cc"),
-                SpotAwardConfig.RECIPIENTS,
-                null,
+                getToEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-to"),
+                getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-cc"),
                 sender,
                 subject,
-                emailBody
+                emailBody,
+                "distinguished_practice"
         );
     }
 }

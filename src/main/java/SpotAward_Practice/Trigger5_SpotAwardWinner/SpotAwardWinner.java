@@ -33,7 +33,8 @@ public class SpotAwardWinner {
                 null,
                 sender,
                 subject,
-                emailBody
+                emailBody,
+                "spot_practice"
         );
 
         if(SpotAwardConfig.runEnvironment.equals("local")){
@@ -42,10 +43,10 @@ public class SpotAwardWinner {
     }
 
     public static void clearMessageIdFileLocal() {
-        String filePath = System.getProperty("user.dir") + "/src/main/resources/message_id.txt";
+        String filePath = System.getProperty("user.dir") + "/src/main/resources/spot_practice_message_id.txt";
         try (FileWriter writer = new FileWriter(filePath, false)) {
             writer.write("");
-            System.out.println("message_id.txt has been cleared.");
+            System.out.println("spot_practice_message_id.txt has been cleared.");
         } catch (IOException e) {
             e.printStackTrace();
         }

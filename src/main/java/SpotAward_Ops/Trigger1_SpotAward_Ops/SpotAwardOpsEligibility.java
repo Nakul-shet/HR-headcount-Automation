@@ -9,6 +9,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Objects;
 
+import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getCCEmailBasedOnRunType;
+import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getToEmailBasedOnRunType;
+
 public class SpotAwardOpsEligibility {
     public static void main(String[] args) {
         PrintStream originalOut = System.out;
@@ -24,13 +27,12 @@ public class SpotAwardOpsEligibility {
         String sender = SpotAwardConfig.SENDER_ID;
         String subject = "Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear() + " - Operational Support";
         SpotAwardEmailSenderUtility.sendEmail(
-            //Objects.requireNonNull(ExcelUtilities.getToEmailAddresses("op-to")),
-            //ExcelUtilities.getToEmailAddresses("op-cc"),
-                SpotAwardConfig.RECIPIENTS,
-                null,
+                getToEmailBasedOnRunType(SpotAwardConfig.localRunFor , "op-to"),
+                getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "op-cc"),
                 sender,
                 subject,
-                emailBody
+                emailBody,
+                "spot_operations"
         );
     }
 }

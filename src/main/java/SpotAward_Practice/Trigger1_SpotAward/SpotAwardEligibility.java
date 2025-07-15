@@ -1,11 +1,19 @@
 package SpotAward_Practice.Trigger1_SpotAward;
 
+import HR_Automation_Utilities.ExcelUtilities;
 import HR_Automation_Utilities.SpotAwardConfig;
 import HR_Automation_Utilities.SpotAwardEmailSenderUtility;
 import HR_Automation_Utilities.SpotAwardEmailBodyBuilderService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
+import java.util.Objects;
+
+import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getCCEmailBasedOnRunType;
+import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getToEmailBasedOnRunType;
 
 public class SpotAwardEligibility {
     public static void main(String[] args) {
@@ -20,15 +28,16 @@ public class SpotAwardEligibility {
             System.setOut(originalOut);
         }
         String sender = SpotAwardConfig.SENDER_ID;
-        String subject = "Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
+        String subject = "Spot Awards " + LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + LocalDate.now().getYear();
+
         SpotAwardEmailSenderUtility.sendEmail(
-//            Objects.requireNonNull(ExcelUtilities.getToEmailAddresses("to")),
-//            ExcelUtilities.getToEmailAddresses("cc"),
-            SpotAwardConfig.RECIPIENTS,
-            null,
-            sender,
-            subject,
-            emailBody
+                getToEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-to"),
+                getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-cc"),
+                sender,
+                subject,
+                emailBody,
+                "spot_practice"
         );
     }
+
 }

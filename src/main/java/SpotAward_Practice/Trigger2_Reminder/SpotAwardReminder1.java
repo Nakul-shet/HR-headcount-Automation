@@ -7,6 +7,9 @@ import HR_Automation_Utilities.SpotAwardEmailBodyBuilderService;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getCCEmailBasedOnRunType;
+import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getToEmailBasedOnRunType;
+
 public class SpotAwardReminder1 {
 
     public static void main(String[] args) {
@@ -23,11 +26,12 @@ public class SpotAwardReminder1 {
         String sender = SpotAwardConfig.SENDER_ID;
         String subject = "Nominate or Regret! SPOT Award Reminder - Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
         SpotAwardEmailSenderUtility.sendEmail(
-                SpotAwardConfig.RECIPIENTS,
-                null,
+                getToEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-to"),
+                getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-cc"),
                 sender,
                 subject,
-                emailBody
+                emailBody,
+                "spot_practice"
         );
     }
 }

@@ -37,8 +37,8 @@ public class SpotAwardOperationsEmailBodyBuilderService {
 
 // Header
         htmlBuilder.append("<tr style=' text-align: center; font-weight: bold; background-color:orange;'>")
-                .append("<th style='padding: 2px 20px;'>Department</th>")
-                .append("<th style='padding: 2px 20px;'>SPOT Eligibility</th>")
+                .append("<th style='padding: 2px 20px;border: 2px solid black;'>Department</th>")
+                .append("<th style='padding: 2px 20px;border: 2px solid black;'>SPOT Eligibility</th>")
                 .append("</tr>");
         htmlBuilder.append(ExcelUtilities.readDistinguishedOperationsData("Ops_Spot"));
 

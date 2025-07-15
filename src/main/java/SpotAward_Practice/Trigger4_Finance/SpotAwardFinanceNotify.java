@@ -27,7 +27,8 @@ public class SpotAwardFinanceNotify {
                 null,
                 sender,
                 subject,
-                emailBody
+                emailBody,
+                "spot_practice"
         );
     }
 }
