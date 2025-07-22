@@ -1,27 +1,25 @@
-package SpotAward_Practice.Trigger1_SpotAward;
+package SpotAward_Practice.Trigger1;
 
-import HR_Automation_Utilities.ExcelUtilities;
-import HR_Automation_Utilities.SpotAwardConfig;
-import HR_Automation_Utilities.SpotAwardEmailSenderUtility;
-import HR_Automation_Utilities.SpotAwardEmailBodyBuilderService;
+import Utilities.Configuration.SpotAwardConfig;
+import Utilities.Common.EmailSenderUtilities;
+import Utilities.Service.SpotAwardPracticeEmailBodyBuilderService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
-import java.util.Objects;
 
-import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getCCEmailBasedOnRunType;
-import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getToEmailBasedOnRunType;
+import static Utilities.Common.EmailSenderUtilities.getCCEmailBasedOnRunType;
+import static Utilities.Common.EmailSenderUtilities.getToEmailBasedOnRunType;
 
-public class SpotAwardEligibility {
+public class SpotAwardPracticeEligibility {
     public static void main(String[] args) {
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(new ByteArrayOutputStream()));
         String emailBody = "";
         try {
-            emailBody = SpotAwardEmailBodyBuilderService.buildEligibilityEmailBody();
+            emailBody = SpotAwardPracticeEmailBodyBuilderService.buildEligibilityEmailBody();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -30,7 +28,7 @@ public class SpotAwardEligibility {
         String sender = SpotAwardConfig.SENDER_ID;
         String subject = "Spot Awards " + LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + LocalDate.now().getYear();
 
-        SpotAwardEmailSenderUtility.sendEmail(
+        EmailSenderUtilities.sendEmail(
                 getToEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-to"),
                 getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-cc"),
                 sender,

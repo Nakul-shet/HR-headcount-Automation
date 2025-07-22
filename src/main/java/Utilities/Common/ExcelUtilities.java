@@ -1,5 +1,6 @@
-package HR_Automation_Utilities;
+package Utilities.Common;
 
+import Utilities.Configuration.SpotAwardConfig;
 import jxl.Cell;
 import jxl.Range;
 import jxl.Sheet;
@@ -69,7 +70,7 @@ public class ExcelUtilities {
         return htmlBuilder.toString();
     }
 
-    public static String readDistinguishedOperationsData(String sheetName) throws BiffException, IOException {
+    public static String readOperationsEligibilityData(String sheetName) throws BiffException, IOException {
 
         StringBuilder htmlBuilder = new StringBuilder();
 
@@ -137,7 +138,7 @@ public class ExcelUtilities {
     public static String[] getToEmailAddresses(String addressType){
 
         try {
-            File file = new File("./DataFiles/Spot Award-Spoc Listtttt.xls");
+            File file = new File("./DataFiles/Spot Award-Spoc Listttt.xls");
             Workbook workbook = Workbook.getWorkbook(file);
             Sheet sheet;
 

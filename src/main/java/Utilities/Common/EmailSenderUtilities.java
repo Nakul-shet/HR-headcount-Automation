@@ -1,4 +1,6 @@
-package HR_Automation_Utilities;
+package Utilities.Common;
+
+import Utilities.Configuration.SpotAwardConfig;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -13,9 +15,9 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
 
-public class SpotAwardEmailSenderUtility {
+public class EmailSenderUtilities {
 
-    public static void sendEmail(String [] recipients,String [] ccRecipients , String sender, String subject, String body , String emailType) {
+    public static void sendEmail(String[] recipients, String[] ccRecipients, String sender, String subject, String body, String emailType) {
         final String password = SpotAwardConfig.SENDER_PASSWORD;
 
         Properties properties = System.getProperties();
@@ -37,7 +39,7 @@ public class SpotAwardEmailSenderUtility {
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
             }
 
-            if(ccRecipients != null){
+            if (ccRecipients != null) {
                 for (String ccRecipient : ccRecipients) {
                     message.addRecipient(Message.RecipientType.CC, new InternetAddress(ccRecipient));
                 }
@@ -56,10 +58,9 @@ public class SpotAwardEmailSenderUtility {
             String messageId;
             boolean messageIdAvailable;
 
-            switch(SpotAwardConfig.runEnvironment){
+            switch (SpotAwardConfig.runEnvironment) {
                 case "local":
                     messageIdAvailable = false;
-                    messageId = null;
 
                     System.out.println(emailType);
 
@@ -67,14 +68,10 @@ public class SpotAwardEmailSenderUtility {
 
                     try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + path))) {
                         messageId = reader.readLine();
-                        if (messageId != null && !messageId.isEmpty()) {
+                        if (messageId != null && !messageId.isEmpty() && !messageId.equals("Expired")) {
                             messageIdAvailable = true;
-
                             message.setHeader("In-Reply-To", messageId);
                             message.setHeader("References", messageId);
-                        }
-                        if(Objects.equals(messageId, "Expired")){
-                            messageIdAvailable = true;
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -84,7 +81,7 @@ public class SpotAwardEmailSenderUtility {
 
                     Transport.send(message);
 
-                    if(!messageIdAvailable){
+                    if (!messageIdAvailable) {
                         messageId = message.getMessageID();
                         try (FileWriter writer = new FileWriter(System.getProperty("user.dir") + path)) {
                             writer.write(messageId);
@@ -105,7 +102,7 @@ public class SpotAwardEmailSenderUtility {
                             message.setHeader("In-Reply-To", messageId);
                             message.setHeader("References", messageId);
                         }
-                        if(Objects.equals(messageId, "Expired")){
+                        if (Objects.equals(messageId, "Expired")) {
                             messageIdAvailable = true;
                         }
                     } catch (IOException e) {
@@ -132,21 +129,21 @@ public class SpotAwardEmailSenderUtility {
         }
     }
 
-    public static String[] getToEmailBasedOnRunType(String runType , String orgTo){
+    public static String[] getToEmailBasedOnRunType(String runType, String orgTo) {
         String[] recepients = new String[0];
         if (runType.equalsIgnoreCase("test")) {
             recepients = SpotAwardConfig.RECIPIENTS;
-        }else if(SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")){
+        } else if (SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")) {
             recepients = Objects.requireNonNull(ExcelUtilities.getToEmailAddresses(orgTo));
         }
         return recepients;
     }
 
-    public static String[] getCCEmailBasedOnRunType(String runType , String orgCC){
+    public static String[] getCCEmailBasedOnRunType(String runType, String orgCC) {
         String[] cc = new String[0];
         if (runType.equalsIgnoreCase("test")) {
             cc = null;
-        }else if(SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")){
+        } else if (SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")) {
             cc = ExcelUtilities.getToEmailAddresses(orgCC);
         }
         return cc;

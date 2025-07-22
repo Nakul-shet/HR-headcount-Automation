@@ -1,8 +1,8 @@
 package SpotAward_Practice.Trigger5_SpotAwardWinner;
 
-import HR_Automation_Utilities.SpotAwardConfig;
-import HR_Automation_Utilities.SpotAwardEmailBodyBuilderService;
-import HR_Automation_Utilities.SpotAwardEmailSenderUtility;
+import Utilities.Configuration.SpotAwardConfig;
+import Utilities.Service.SpotAwardPracticeEmailBodyBuilderService;
+import Utilities.Common.EmailSenderUtilities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import jxl.read.biff.BiffException;
 
-import static HR_Automation_Utilities.SpotAwardEmailBodyBuilderService.getSpotAwardWinnersEmail;
+import static Utilities.Service.SpotAwardPracticeEmailBodyBuilderService.getSpotAwardWinnersEmail;
 
 public class SpotAwardWinner {
 
@@ -20,7 +20,7 @@ public class SpotAwardWinner {
         System.setOut(new PrintStream(new ByteArrayOutputStream()));
         String emailBody = "";
         try {
-            emailBody = SpotAwardEmailBodyBuilderService.buildEmployeeConfirmationEmailBody();
+            emailBody = SpotAwardPracticeEmailBodyBuilderService.buildEmployeeConfirmationEmailBody();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -28,7 +28,7 @@ public class SpotAwardWinner {
         }
         String sender = SpotAwardConfig.SENDER_ID;
         String subject = "Finance Confirmation for Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
-        SpotAwardEmailSenderUtility.sendEmail(
+        EmailSenderUtilities.sendEmail(
                 getSpotAwardWinnersEmail(),
                 null,
                 sender,

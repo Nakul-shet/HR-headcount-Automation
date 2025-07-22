@@ -1,4 +1,6 @@
-package HR_Automation_Utilities;
+package Utilities.Common;
+
+import Utilities.Configuration.SpotAwardConfig;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -6,7 +8,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Base64;
 
-public class CommonEmailBodyUtilities {
+public class EmailBodyUtilities {
     public static String nominateEmployeesButton(String orgStructure) {
         String sharepointLink = orgStructure.equalsIgnoreCase("practice") ? SpotAwardConfig.SHAREPOINT_LINK_PRACTICE : SpotAwardConfig.SHAREPOINT_LINK_OPERATIONS;
         return new StringBuilder()
