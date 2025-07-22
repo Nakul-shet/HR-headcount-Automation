@@ -1,13 +1,17 @@
-package DistinguishedAward_Ops.Trigger1_DistinguisedAward;
+package DistinguishedAward_Ops.Trigger1;
 
-import HR_Automation_Utilities.*;
+import Utilities.Common.EmailBodyUtilities;
+import Utilities.Common.EmailSenderUtilities;
+
+import Utilities.Configuration.SpotAwardConfig;
+import Utilities.Service.DistinguishedAwardOperationsEmailBodyBuilderService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Objects;
 
-import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getCCEmailBasedOnRunType;
-import static HR_Automation_Utilities.SpotAwardEmailSenderUtility.getToEmailBasedOnRunType;
+
+import static Utilities.Common.EmailSenderUtilities.getCCEmailBasedOnRunType;
+import static Utilities.Common.EmailSenderUtilities.getToEmailBasedOnRunType;
 
 public class DistinguishedAwardOpsEligibility {
     public static void main(String[] args) {
@@ -22,8 +26,8 @@ public class DistinguishedAwardOpsEligibility {
             System.setOut(originalOut);
         }
         String sender = SpotAwardConfig.SENDER_ID;
-        String subject = "Nominations for the Reward and Recognition (Distinguished Award) - Q" + CommonEmailBodyUtilities.getCurrentQuarter() + " " + java.time.LocalDate.now().getYear();
-        SpotAwardEmailSenderUtility.sendEmail(
+        String subject = "Nominations for the Reward and Recognition (Distinguished Award) - Q" + EmailBodyUtilities.getCurrentQuarter() + " " + java.time.LocalDate.now().getYear() + " - Operational Support";
+        EmailSenderUtilities.sendEmail(
                 getToEmailBasedOnRunType(SpotAwardConfig.localRunFor , "op-to"),
                 getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "op-cc"),
                 sender,

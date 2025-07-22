@@ -1,24 +1,23 @@
-package HR_Automation_Utilities;
+package Utilities.Service;
 
+import Utilities.Common.EmailBodyUtilities;
+import Utilities.Common.ExcelUtilities;
+import Utilities.Configuration.SpotAwardConfig;
 import jxl.Cell;
-import jxl.Range;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 
-public class SpotAwardEmailBodyBuilderService {
+public class SpotAwardPracticeEmailBodyBuilderService {
     public static String buildEligibilityEmailBody() throws Exception {
 
         StringBuilder htmlBuilder = new StringBuilder();
@@ -37,7 +36,7 @@ public class SpotAwardEmailBodyBuilderService {
                 .append(java.time.LocalDate.now().getYear())
                 .append("</p>");
 
-        htmlBuilder.append(CommonEmailBodyUtilities.nominateEmployeesButton(SpotAwardConfig.ORG_PRACTICE));
+        htmlBuilder.append(EmailBodyUtilities.nominateEmployeesButton(SpotAwardConfig.ORG_PRACTICE));
 
         htmlBuilder.append("<table border='1' style='border-collapse: collapse; width: auto; border-width: 2px; text-align:center;'>");
         htmlBuilder.append("<tr style='background-color:yellow'>");
@@ -52,7 +51,7 @@ public class SpotAwardEmailBodyBuilderService {
 
         htmlBuilder.append(ExcelUtilities.readHeadCountData());
         htmlBuilder.append("</table>");
-        htmlBuilder.append(CommonEmailBodyUtilities.getEmailSignature());
+        htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
         htmlBuilder.append("</body></html>");
         return htmlBuilder.toString();
     }
@@ -81,7 +80,7 @@ public class SpotAwardEmailBodyBuilderService {
                 .append("</p>")
                 .append("<p>Let the nominations roll in!</p>");
 
-        htmlBuilder.append(CommonEmailBodyUtilities.getEmailSignature());
+        htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
         htmlBuilder.append("</body></html>");
 
         return htmlBuilder.toString();
@@ -121,7 +120,7 @@ public class SpotAwardEmailBodyBuilderService {
 
         htmlBuilder.append("<p><b>Let’s make those nominations count</b> (before the HR ops team starts chasing you with memes)! 😄</p>");
 
-        htmlBuilder.append(CommonEmailBodyUtilities.getEmailSignature());
+        htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
         htmlBuilder.append("</body></html>");
 
         return htmlBuilder.toString();
@@ -147,7 +146,7 @@ public class SpotAwardEmailBodyBuilderService {
                 .append("Please do confirm once done.<br><br>")
                 .append(htmlTable)
                 .append("<br>")
-                .append(CommonEmailBodyUtilities.getEmailSignature());
+                .append(EmailBodyUtilities.getEmailSignature());
 
         return body.toString();
     }
@@ -217,7 +216,7 @@ public class SpotAwardEmailBodyBuilderService {
                 .append("For additional credit related queries, contact <a href='mailto:kiskala@teksystems.com'>kiskala@teksystems.com</a>.<br>");
 
         htmlBuilder.append("</div>");
-        htmlBuilder.append(CommonEmailBodyUtilities.getEmailSignature());
+        htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
         htmlBuilder.append("</div>");
 
         htmlBuilder.append("</body></html>");

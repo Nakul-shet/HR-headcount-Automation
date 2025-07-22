@@ -1,8 +1,8 @@
 package SpotAward_Practice.Trigger4_Finance;
 
-import HR_Automation_Utilities.SpotAwardConfig;
-import HR_Automation_Utilities.SpotAwardEmailBodyBuilderService;
-import HR_Automation_Utilities.SpotAwardEmailSenderUtility;
+import Utilities.Configuration.SpotAwardConfig;
+import Utilities.Service.SpotAwardPracticeEmailBodyBuilderService;
+import Utilities.Common.EmailSenderUtilities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -14,7 +14,7 @@ public class SpotAwardFinanceNotify {
         System.setOut(new PrintStream(new ByteArrayOutputStream()));
         String emailBody = "";
         try {
-            emailBody = SpotAwardEmailBodyBuilderService.buildFinanceEmailBody();
+            emailBody = SpotAwardPracticeEmailBodyBuilderService.buildFinanceEmailBody();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -22,7 +22,7 @@ public class SpotAwardFinanceNotify {
         }
         String sender = SpotAwardConfig.SENDER_ID;
         String subject = "Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
-        SpotAwardEmailSenderUtility.sendEmail(
+        EmailSenderUtilities.sendEmail(
                 SpotAwardConfig.RECIPIENTS,
                 null,
                 sender,
