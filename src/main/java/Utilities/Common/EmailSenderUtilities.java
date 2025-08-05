@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
@@ -57,21 +58,34 @@ public class EmailSenderUtilities {
 
             String messageId;
             boolean messageIdAvailable;
+            boolean expiredId;
 
             switch (SpotAwardConfig.runEnvironment) {
                 case "local":
                     messageIdAvailable = false;
+                    expiredId = false;
 
-                    System.out.println(emailType);
+                    String []emailTypes = emailType.contains(" ")?emailType.trim().split(" "): new String[]{emailType};
+                    if(emailTypes.length>1){
 
-                    String path = "/src/main/resources/" + emailType + "_message_id.txt";
+                    }
+                    System.out.println(Arrays.toString(emailTypes));
+
+                    //TODO :Remove emailTypes[0]
+                    String path = "/src/main/resources/" + emailTypes[0] + "_message_id.txt";
 
                     try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + path))) {
                         messageId = reader.readLine();
-                        if (messageId != null && !messageId.isEmpty() && !messageId.equals("Expired")) {
-                            messageIdAvailable = true;
-                            message.setHeader("In-Reply-To", messageId);
-                            message.setHeader("References", messageId);
+
+                        if (messageId != null && !messageId.isEmpty()) {
+                            if(messageId.equals("Expired")){
+                                expiredId = true;
+                            }
+                            else{
+                                messageIdAvailable = true;
+                                message.setHeader("In-Reply-To", messageId);
+                                message.setHeader("References", messageId);
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -81,7 +95,7 @@ public class EmailSenderUtilities {
 
                     Transport.send(message);
 
-                    if (!messageIdAvailable) {
+                    if (!messageIdAvailable && !expiredId) {
                         messageId = message.getMessageID();
                         try (FileWriter writer = new FileWriter(System.getProperty("user.dir") + path)) {
                             writer.write(messageId);
