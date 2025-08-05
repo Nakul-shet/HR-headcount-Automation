@@ -1,0 +1,37 @@
+package Automation_Triggers.Practice_SpotAward.Trigger2;
+
+import Utilities.Configuration.SpotAwardConfig;
+import Utilities.Common.EmailSenderUtilities;
+import Utilities.Service.SpotAwardPracticeEmailBodyBuilderService;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static Utilities.Common.EmailSenderUtilities.getCCEmailBasedOnRunType;
+import static Utilities.Common.EmailSenderUtilities.getToEmailBasedOnRunType;
+
+public class SpotAwardPracticeReminder1 {
+
+    public static void main(String[] args) {
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(new ByteArrayOutputStream()));
+        String emailBody = "";
+        try {
+            emailBody = SpotAwardPracticeEmailBodyBuilderService.buildReminderEmailBody1();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            System.setOut(originalOut);
+        }
+        String sender = SpotAwardConfig.SENDER_ID;
+        String subject = "Reminder: Nominate or Regret! - Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear();
+        EmailSenderUtilities.sendEmail(
+                getToEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-to"),
+                getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "prac-cc"),
+                sender,
+                subject,
+                emailBody,
+                "spot_practice"
+        );
+    }
+}

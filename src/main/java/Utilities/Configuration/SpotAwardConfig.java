@@ -4,10 +4,11 @@ public class SpotAwardConfig {
     public static final String runEnvironment = "local"; // local or jenkins
     public static final String localRunFor = "test"; // test or prod
     public static final double ELIGIBILITY_PERCENTAGE = 0.02;
-    public static final String HEADCOUNT_DATA_FILENAME = "head_count_excel.xls";
-    public static final String FINANCE_DATA_FILENAME = "SpotAwardDataFinance.xls";
-    public static final String OPS_ELIGIBILITY = "Ops_Eligibility.xls";
-    public static final String HEADCOUNT_DATE_TABLE_NAME = "New Org Headcount";
+    public static final String FILE_PRACTICE_EILIGIBILITY_DATA= "Practice_Eligibility.xls";
+    public static final String FILE_SPOT_FINANCE_DATA = "Spot_Employee_Data.xls";
+    public static final String FILE_DISTINGUISHED_FINANCE_DATA = "Distinguished_Employee_Data.xls";
+    public static final String FILE_OPS_ELIGIBILITY_DATA = "Ops_Eligibility.xls";
+    public static final String PRACTICE_TABLE_NAME = "New Org Headcount";
     public static final String ORG_PRACTICE = "practice";
     public static final String ORG_OPERATIONS = "operations";
     public static final String SENDER_ID = "";//TGSHRIndiaOps@teksystems.com

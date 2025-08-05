@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.List;
 
 public class EmailBodyUtilities {
     public static String nominateEmployeesButton(String orgStructure) {
@@ -74,4 +75,18 @@ public class EmailBodyUtilities {
             return 3; // Q4: Oct - Dec
         }
     }
+    public static String generateHtmlTable(List<List<String>> tableData) {
+        StringBuilder table = new StringBuilder("<table border='1' cellspacing='0' cellpadding='5'>");
+
+        for (int i = 0; i < tableData.size(); i++) {
+            table.append("<tr>");
+            for (String cell : tableData.get(i)) {
+                table.append(i == 0 ? "<th style='background-color : yellow;'>" : "<td>").append(cell).append(i == 0 ? "</th>" : "</td>");
+            }
+            table.append("</tr>");
+        }
+        table.append("</table>");
+        return table.toString();
+    }
+
 }

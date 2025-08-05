@@ -15,14 +15,14 @@ import java.util.List;
 public class ExcelUtilities {
     public static String readHeadCountData() throws Exception {
         StringBuilder htmlBuilder = new StringBuilder();
-        File file = new File("./DataFiles/" + SpotAwardConfig.HEADCOUNT_DATA_FILENAME);
+        File file = new File("./DataFiles/EligibilityData/" + SpotAwardConfig.FILE_PRACTICE_EILIGIBILITY_DATA);
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(0);
         int mergedCellRow = -1;
         int mergedCellCol = -1;
         for (Range range : sheet.getMergedCells()) {
             Cell topLeft = range.getTopLeft();
-            if (topLeft.getContents().trim().equalsIgnoreCase(SpotAwardConfig.HEADCOUNT_DATE_TABLE_NAME)) {
+            if (topLeft.getContents().trim().equalsIgnoreCase(SpotAwardConfig.PRACTICE_TABLE_NAME)) {
                 mergedCellRow = topLeft.getRow();
                 mergedCellCol = topLeft.getColumn();
                 break;
@@ -74,7 +74,7 @@ public class ExcelUtilities {
 
         StringBuilder htmlBuilder = new StringBuilder();
 
-        File file = new File("./DataFiles/" + SpotAwardConfig.OPS_ELIGIBILITY);
+        File file = new File("./DataFiles/EligibilityData/" + SpotAwardConfig.FILE_OPS_ELIGIBILITY_DATA);
         Workbook workbook = Workbook.getWorkbook(file);
         int sheetNumber = sheetName.equalsIgnoreCase("Ops_Spot") ? 0 : 1;
         Sheet sheet = workbook.getSheet(sheetNumber);
@@ -138,22 +138,21 @@ public class ExcelUtilities {
     public static String[] getToEmailAddresses(String addressType){
 
         try {
-            File file = new File("./DataFiles/Spot Award-Spoc Listttt.xls");
+            File file = new File("./DataFiles/Spoc_List.xls");
             Workbook workbook = Workbook.getWorkbook(file);
             Sheet sheet;
 
-            if(addressType.equals("prac-to")){
-                sheet = workbook.getSheet(0);
-            }else if(addressType.equals("prac-cc")){
-                sheet = workbook.getSheet(1);
-            }else if(addressType.equals("op-to")){
-                sheet = workbook.getSheet(2);
-            }else{
-                sheet = workbook.getSheet(3);
-            }
+            sheet = switch (addressType) {
+                case "prac-to"     -> workbook.getSheet(0);
+                case "prac-cc"     -> workbook.getSheet(1);
+                case "op-to"       -> workbook.getSheet(2);
+                case "op-cc"       -> workbook.getSheet(3);
+                case "finance-to"  -> workbook.getSheet(4);
+                case "finance-cc"  -> workbook.getSheet(5);
+                default            -> throw new IllegalArgumentException("Unknown address type: " + addressType);
+            };
 
             List<String> emails = new ArrayList<>();
-
             // Loop starts from row 1 (index 1) to skip the header
             for (int row = 1; row < sheet.getRows(); row++) {
                 Cell emailCell = sheet.getCell(2, row); // Column index 2 (OfficialMail)
@@ -164,9 +163,8 @@ public class ExcelUtilities {
             }
 
             String[] emailArray = emails.toArray(new String[0]);
-
-            for (String e : emailArray) {
-                System.out.println(e);
+            for (String email : emailArray) {
+                System.out.println(email);
             }
 
             return emailArray;
@@ -178,7 +176,54 @@ public class ExcelUtilities {
         return null;
     }
 
+    public static List<List<String>> readExcelData(File file) throws Exception {
+        List<List<String>> data = new ArrayList<>();
+        Workbook workbook = Workbook.getWorkbook(file);
+        Sheet sheet = workbook.getSheet(0);
+
+        for (int row = 0; row < sheet.getRows(); row++) {
+            List<String> rowData = new ArrayList<>();
+            for (int col = 0; col < sheet.getColumns(); col++) {
+                Cell cell = sheet.getCell(col, row);
+                rowData.add(cell.getContents());
+            }
+            data.add(rowData);
+        }
+        workbook.close();
+        return data;
+    }
+
+    public static String[] getAwardWinnersEmail(String fileName) throws BiffException, IOException {
+        File file = new File("./DataFiles/EmployeeFinanceData/" + fileName);
+        Workbook workbook = Workbook.getWorkbook(file);
+        Sheet sheet = workbook.getSheet(0);
+        int mailIdColumn = -1;
+        Cell[] headerRow = sheet.getRow(0);
+        for (int i = 0; i < headerRow.length; i++) {
+            if (headerRow[i].getContents().equalsIgnoreCase("Mailid")) {
+                mailIdColumn = i;
+                break;
+            }
+        }
+        if (mailIdColumn == -1) {
+            System.out.println("Mailid column not found.");
+        }
+        List<String> emailList = new ArrayList<>();
+        for (int row = 1; row < sheet.getRows(); row++) {
+            Cell cell = sheet.getCell(mailIdColumn, row);
+            String email = cell.getContents().trim();
+            if (!email.isEmpty()) {
+                emailList.add(email);
+            }
+        }
+        workbook.close();
+        String[] emailArray = emailList.toArray(new String[0]);
+        return emailArray;
+    }
+
+
+
     public static void main(String[] args) {
-        getToEmailAddresses("op-cc");
+        getToEmailAddresses("finance-cc");
     }
 }
