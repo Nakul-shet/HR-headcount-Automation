@@ -6,10 +6,12 @@ import jxl.Range;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import org.apache.poi.ss.formula.functions.Replace;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ExcelUtilities {
@@ -138,7 +140,7 @@ public class ExcelUtilities {
     public static String[] getToEmailAddresses(String addressType){
 
         try {
-            File file = new File("./DataFiles/Spoc_List.xls");
+            File file = new File("./DataFiles/SpocData/Spoc_List.xls");
             Workbook workbook = Workbook.getWorkbook(file);
             Sheet sheet;
 
@@ -180,12 +182,18 @@ public class ExcelUtilities {
         List<List<String>> data = new ArrayList<>();
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(0);
-
         for (int row = 0; row < sheet.getRows(); row++) {
             List<String> rowData = new ArrayList<>();
             for (int col = 0; col < sheet.getColumns(); col++) {
                 Cell cell = sheet.getCell(col, row);
-                rowData.add(cell.getContents());
+                String cellContent = cell.getContents();
+
+                // Clean the replacement character and extra spaces
+                cellContent = cellContent.replace("�", " ")
+                        .replaceAll("\\s+", " ")
+                        .trim();
+
+                rowData.add(cellContent);
             }
             data.add(rowData);
         }
@@ -200,13 +208,13 @@ public class ExcelUtilities {
         int mailIdColumn = -1;
         Cell[] headerRow = sheet.getRow(0);
         for (int i = 0; i < headerRow.length; i++) {
-            if (headerRow[i].getContents().equalsIgnoreCase("Mailid")) {
+            if (headerRow[i].getContents().equalsIgnoreCase("Tek Mail Id")) {
                 mailIdColumn = i;
                 break;
             }
         }
         if (mailIdColumn == -1) {
-            System.out.println("Mailid column not found.");
+            System.out.println("Tek Mail Id column not found.");
         }
         List<String> emailList = new ArrayList<>();
         for (int row = 1; row < sheet.getRows(); row++) {
@@ -223,7 +231,8 @@ public class ExcelUtilities {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BiffException, IOException {
         getToEmailAddresses("finance-cc");
+        //System.out.println(Arrays.toString(getAwardWinnersEmail(SpotAwardConfig.FILE_SPOT_FINANCE_DATA)));
     }
 }
