@@ -39,12 +39,21 @@ public class SpotAwardWinner {
     }
 
     public static void clearMessageIdFileLocal() {
-        String filePath = System.getProperty("user.dir") + "/src/main/resources/spot_practice_message_id.txt";
-        try (FileWriter writer = new FileWriter(filePath, false)) {
-            writer.write("");
-            System.out.println("spot_practice_message_id.txt has been cleared.");
-        } catch (IOException e) {
-            e.printStackTrace();
+        String basePath = System.getProperty("user.dir") + "/src/main/resources/";
+        String[] fileNames = {
+                "spot_practice_message_id.txt",
+                "spot_operations_message_id.txt"
+        };
+
+        for (String fileName : fileNames) {
+            String filePath = basePath + fileName;
+            try (FileWriter writer = new FileWriter(filePath, false)) {
+                writer.write("");
+                System.out.println(fileName + " has been cleared.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 }

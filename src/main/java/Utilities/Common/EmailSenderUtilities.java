@@ -66,43 +66,45 @@ public class EmailSenderUtilities {
                     expiredId = false;
 
                     String []emailTypes = emailType.contains(" ")?emailType.trim().split(" "): new String[]{emailType};
-                    if(emailTypes.length>1){
 
-                    }
-                    System.out.println(Arrays.toString(emailTypes));
+                    if(!(emailTypes.length >1)){
 
-                    //TODO :Remove emailTypes[0]
-                    String path = "/src/main/resources/" + emailTypes[0] + "_message_id.txt";
+                        System.out.println(Arrays.toString(emailTypes));
 
-                    try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + path))) {
-                        messageId = reader.readLine();
+                        //TODO :Remove emailTypes[0]
+                        String path = "/src/main/resources/" + emailTypes[0] + "_message_id.txt";
 
-                        if (messageId != null && !messageId.isEmpty()) {
-                            if(messageId.equals("Expired")){
-                                expiredId = true;
+                        try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + path))) {
+                            messageId = reader.readLine();
+
+                            if (messageId != null && !messageId.isEmpty()) {
+                                if(messageId.equals("Expired")){
+                                    expiredId = true;
+                                }
+                                else{
+                                    messageIdAvailable = true;
+                                    message.setHeader("In-Reply-To", messageId);
+                                    message.setHeader("References", messageId);
+                                }
                             }
-                            else{
-                                messageIdAvailable = true;
-                                message.setHeader("In-Reply-To", messageId);
-                                message.setHeader("References", messageId);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (!messageIdAvailable && !expiredId) {
+                            messageId = message.getMessageID();
+                            try (FileWriter writer = new FileWriter(System.getProperty("user.dir") + path)) {
+                                writer.write(messageId);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
 
                     message.saveChanges();
 
                     Transport.send(message);
 
-                    if (!messageIdAvailable && !expiredId) {
-                        messageId = message.getMessageID();
-                        try (FileWriter writer = new FileWriter(System.getProperty("user.dir") + path)) {
-                            writer.write(messageId);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
                     break;
                 case "jenkins":
                     messageId = null;
