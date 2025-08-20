@@ -55,7 +55,7 @@ public class ExcelUtilities {
             if (department.isEmpty() && countStr.isEmpty()) break;
             try {
                 int headCount = Integer.parseInt(countStr);
-                int twoPercent = (int) Math.floor(headCount * SpotAwardConfig.ELIGIBILITY_PERCENTAGE);
+                int twoPercent = customRound(headCount * SpotAwardConfig.ELIGIBILITY_PERCENTAGE);
                 htmlBuilder.append(String.format(
                         "<tr><td style='padding: 2px 30px; border: 2px solid black;'>%s</td>" +
                                 "<td style='padding: 2px 30px; border: 2px solid black;'>%d</td></tr>",
@@ -70,6 +70,17 @@ public class ExcelUtilities {
         }
         workbook.close();
         return htmlBuilder.toString();
+    }
+
+    public static int customRound(double value) {
+        int integerPart = (int) Math.floor(value);
+        double decimalPart = value - integerPart;
+
+        if (decimalPart > 0.50) {
+            return integerPart + 1;
+        } else {
+            return integerPart;
+        }
     }
 
     public static String readOperationsEligibilityData(String sheetName) throws BiffException, IOException {
@@ -190,6 +201,7 @@ public class ExcelUtilities {
 
                 // Clean the replacement character and extra spaces
                 cellContent = cellContent.replace("�", " ")
+                        .replaceAll("\"", "")
                         .replaceAll("\\s+", " ")
                         .trim();
 
@@ -206,6 +218,7 @@ public class ExcelUtilities {
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(0);
         int mailIdColumn = -1;
+        int count =0;
         Cell[] headerRow = sheet.getRow(0);
         for (int i = 0; i < headerRow.length; i++) {
             if (headerRow[i].getContents().equalsIgnoreCase("Tek Mail Id")) {
@@ -221,9 +234,11 @@ public class ExcelUtilities {
             Cell cell = sheet.getCell(mailIdColumn, row);
             String email = cell.getContents().trim();
             if (!email.isEmpty()) {
+                count++;
                 emailList.add(email);
             }
         }
+        System.out.println("Total number of Awardees: "+count);
         workbook.close();
         String[] emailArray = emailList.toArray(new String[0]);
         return emailArray;
@@ -232,7 +247,10 @@ public class ExcelUtilities {
 
 
     public static void main(String[] args) throws BiffException, IOException {
-        getToEmailAddresses("finance-cc");
-        //System.out.println(Arrays.toString(getAwardWinnersEmail(SpotAwardConfig.FILE_SPOT_FINANCE_DATA)));
+        getToEmailAddresses("op-cc");
+
+
+//        Arrays.stream(getAwardWinnersEmail(SpotAwardConfig.FILE_DISTINGUISHED_FINANCE_DATA))
+//                .forEach(System.out::println);
     }
 }

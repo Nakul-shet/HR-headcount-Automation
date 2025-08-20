@@ -46,7 +46,7 @@ public class CommonEmailBodyBuilderService {
         LocalDate today = LocalDate.now();
         int month =today.getMonthValue();
         int year = today.getYear();
-        LocalDate statementDate = LocalDate.of(year, month, 8);
+        LocalDate statementDate = LocalDate.of(year, month, 12);
 
         String formattedStatementDate = statementDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
@@ -61,8 +61,8 @@ public class CommonEmailBodyBuilderService {
                 .append(" ")
                 .append(java.time.LocalDate.now().getYear())
                 .append("</b>!<br><br>")
-                .append("The award amount of <b>1K</b> has been credited to your Salary Account. ")
-                .append("<b>It will take 24 hours to reflect in your bank account. Please check the bank statement accordingly</b> ")
+                .append("The award amount of <b>1K</b> has been credited to your <b style= 'background-color: yellow;'>Pluxee card Account</b>. ")
+                .append("<b>It will take 24 hours to reflect in your account. Please check accordingly</b> ")
                 .append("and revert in case of any discrepancies on or after <b>")
                 .append(formattedStatementDate)
                 .append("</b>.<br><br>")
@@ -70,7 +70,7 @@ public class CommonEmailBodyBuilderService {
                 .append("1. Reach out to your reporting manager/ L1 managers for the award certificates.<br>")
                 .append("2. The SPOT Awards certificates are shared with L1 Managers for your RMs reference.<br>")
                 .append("3. Post the certificate in LinkedIn and tag <b>TEKsystems Global Services In India</b>.<br>")
-                .append("4. Amount is not included in the salary; it is credited to your salary account separately. ")
+                .append("4. Amount is not included in the Pluxee card or not having the card; ")
                 .append("For additional credit related queries, contact <a href='mailto:kiskala@teksystems.com'>kiskala@teksystems.com</a>.<br>");
 
         htmlBuilder.append("</div>");
@@ -91,8 +91,8 @@ public class CommonEmailBodyBuilderService {
 
         body.append("Hi Kishore,<br><br>")
 
-                .append("Please credit the Distinguish award amount for the below-mentioned Employees, this is approved by the respective Practice Head for Q")
-                .append("<b>"+EmailBodyUtilities.getCurrentQuarter()+"-"+LocalDate.now().getYear()+"</b>")
+                .append("Please credit the Distinguished Performer amount for the below-mentioned Employees, this is approved by the respective Practice Head for ")
+                .append("<b>Q"+EmailBodyUtilities.getCurrentQuarter()+"-"+LocalDate.now().getYear()+"</b>")
                 .append("<br><br>")
                 .append("Please do confirm once done.<br><br>")
                 .append(htmlTable)
@@ -107,7 +107,7 @@ public class CommonEmailBodyBuilderService {
         LocalDate today = LocalDate.now();
         int month = today.getMonthValue();
         int year = today.getYear();
-        LocalDate statementDate = LocalDate.of(year, month, 8);
+        LocalDate statementDate = LocalDate.of(year, month, 14);
 
         String formattedStatementDate = statementDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
@@ -122,8 +122,8 @@ public class CommonEmailBodyBuilderService {
                 .append(" ")
                 .append(java.time.LocalDate.now().getYear())
                 .append("</b>!<br><br>")
-                .append("The award amount of <b>$100</b> has been credited to your Salary Account. ")
-                .append("<b>It will take 24 hours to reflect in your bank account. Please check the bank statement accordingly</b> ")
+                .append("The award amount of <b>$100</b> has been credited to your <b style= 'background-color: yellow;'>Pluxee card Account</b>. ")
+                .append("<b>It will take 24 hours to reflect in your account. Please check accordingly</b> ")
                 .append("and revert in case of any discrepancies on or after <b>")
                 .append(formattedStatementDate)
                 .append("</b>.<br><br>")
@@ -131,8 +131,10 @@ public class CommonEmailBodyBuilderService {
                 .append("1. Reach out to your reporting manager/ L1 managers for the award certificates.<br>")
                 .append("2. The Distinguished Awards certificates are shared with L1 Managers for your RMs reference.<br>")
                 .append("3. Post the certificate in LinkedIn and tag <b>TEKsystems Global Services In India</b>.<br>")
-                .append("4. Amount is not included in the salary; it is credited to your salary account separately. ")
-                .append("For additional credit related queries, contact <a href='mailto:kiskala@teksystems.com'>kiskala@teksystems.com</a>.<br>");
+                .append("4. Amount is not included in the Pluxee card or not having the card; ")
+                .append("For additional credit related queries, contact <a href='mailto:kiskala@teksystems.com'>kiskala@teksystems.com</a>.<br>")
+                .append("5. Attached the mail which consists the details and process of Pluxee card in case of the following( new card/KYC related/Deactivated)");
+
 
         htmlBuilder.append("</div>");
         htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
