@@ -17,7 +17,7 @@ public class DistinguishedAwardFinance {
             e.printStackTrace();
         }
         String sender = SpotAwardConfig.SENDER_ID;
-        String subject = "Reward and Recognition (Distinguished Award) - Q" + EmailBodyUtilities.getCurrentQuarter() + " " + java.time.LocalDate.now().getYear();
+        String subject = "Q" + EmailBodyUtilities.getCurrentQuarter() + " - Distinguished Performer - Credit $100 - " + java.time.LocalDate.now().getYear();
         EmailSenderUtilities.sendEmail(
                 getToEmailBasedOnRunType(SpotAwardConfig.localRunFor , "finance-to"),
                 getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "finance-cc"),

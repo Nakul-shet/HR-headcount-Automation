@@ -54,6 +54,11 @@ public class EmailSenderUtilities {
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(textPart);
 
+//            MimeBodyPart attachmentPart = new MimeBodyPart();
+//            attachmentPart.attachFile("C:\\Users\\kmk\\OneDrive - ALLEGIS GROUP\\Documents\\KARTHIK-M-K\\HR-headcount-Automation\\DataFiles\\Pluxee card activation processes.eml"); // or .pdf, .txt, etc.
+//            attachmentPart.setFileName("Pluxee Card Activation Processes.eml"); // optional, controls download name
+//            multipart.addBodyPart(attachmentPart);
+
             message.setContent(multipart);
 
             String messageId;
@@ -71,7 +76,6 @@ public class EmailSenderUtilities {
 
                         System.out.println(Arrays.toString(emailTypes));
 
-                        //TODO :Remove emailTypes[0]
                         String path = "/src/main/resources/" + emailTypes[0] + "_message_id.txt";
 
                         try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + path))) {
@@ -91,6 +95,9 @@ public class EmailSenderUtilities {
                             e.printStackTrace();
                         }
 
+                        message.saveChanges();
+                        Transport.send(message);
+
                         if (!messageIdAvailable && !expiredId) {
                             messageId = message.getMessageID();
                             try (FileWriter writer = new FileWriter(System.getProperty("user.dir") + path)) {
@@ -100,10 +107,11 @@ public class EmailSenderUtilities {
                             }
                         }
                     }
-
-                    message.saveChanges();
-
-                    Transport.send(message);
+                    else{
+                        System.out.println(Arrays.toString(emailTypes));
+                        message.saveChanges();
+                        Transport.send(message);
+                    }
 
                     break;
                 case "jenkins":

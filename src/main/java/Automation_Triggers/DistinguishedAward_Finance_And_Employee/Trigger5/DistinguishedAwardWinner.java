@@ -9,6 +9,7 @@ import jxl.read.biff.BiffException;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static Utilities.Common.EmailSenderUtilities.getCCEmailBasedOnRunType;
 import static Utilities.Common.ExcelUtilities.getAwardWinnersEmail;
 
 
@@ -23,10 +24,10 @@ public class DistinguishedAwardWinner {
             e.printStackTrace();
             }
         String sender = SpotAwardConfig.SENDER_ID;
-        String subject = "Finance Confirmation for Reward and Recognition (Distinguished Award) - Q" + EmailBodyUtilities.getCurrentQuarter() + " " + java.time.LocalDate.now().getYear();
+        String subject = "Congratulations | Updates | Distinguished Award | Q" + EmailBodyUtilities.getCurrentQuarter() + " " + java.time.LocalDate.now().getYear();
         EmailSenderUtilities.sendEmail(
                 getAwardWinnersEmail(SpotAwardConfig.FILE_DISTINGUISHED_FINANCE_DATA),
-                null,
+                getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "finance-cc"),
                 sender,
                 subject,
                 emailBody,

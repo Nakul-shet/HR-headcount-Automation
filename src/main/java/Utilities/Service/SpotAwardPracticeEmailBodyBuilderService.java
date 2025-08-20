@@ -17,7 +17,7 @@ public class SpotAwardPracticeEmailBodyBuilderService {
                 .append(" ")
                 .append(java.time.LocalDate.now().getYear())
                 .append("</p>");
-        htmlBuilder.append("<p>Kindly share the nominations as per the <b>New Org</b> structure by clicking the <b>Nominate Employees</b> button below, on or before 28 ")
+        htmlBuilder.append("<p>Kindly share the nominations as per the <b>New Org</b> structure by clicking the <b>Nominate Employees</b> button below, on or before 29 ")
                 .append(java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH))
                 .append(" ")
                 .append(java.time.LocalDate.now().getYear())
