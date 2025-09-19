@@ -25,18 +25,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+          cache: maven
 
       - name: Update MasterConfig.java with environment
         run: |
           sed -i 's|public static final String activeEnvironment = ".*";|public static final String activeEnvironment = "${{ github.event.inputs.environment }}";|' src/main/java/Utilities/Configuration/MasterConfig.java
-          echo "Updated environment to ${{ github.event.inputs.environment }}"
+          echo "✅ Updated environment to ${{ github.event.inputs.environment }}"
           grep "activeEnvironment" src/main/java/Utilities/Configuration/MasterConfig.java
 
-      - name: Compile all Java files
-        run: |
-          find src/main/java -name "*.java" > sources.txt
-          javac -cp src @sources.txt
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
 
       - name: Run SpotAwardPracticeEligibility
-        run: |
-          java -cp src Automation_Triggers.Practice_SpotAward.Trigger1.SpotAwardPracticeEligibility
+        run: mvn -q exec:java -Dexec.mainClass="Automation_Triggers.Practice_SpotAward.Trigger1.SpotAwardPracticeEligibility"
