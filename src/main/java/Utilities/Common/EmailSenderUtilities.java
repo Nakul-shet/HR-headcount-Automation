@@ -1,5 +1,7 @@
 package Utilities.Common;
 
+import Utilities.Configuration.AppConfig;
+import Utilities.Configuration.MasterConfig;
 import Utilities.Configuration.SpotAwardConfig;
 
 import javax.mail.*;
@@ -153,10 +155,12 @@ public class EmailSenderUtilities {
         }
     }
 
+    static AppConfig config = MasterConfig.getDataBasedOnActiveConfig(MasterConfig.activeEnvironment);
+
     public static String[] getToEmailBasedOnRunType(String runType, String orgTo) {
         String[] recepients = new String[0];
         if (runType.equalsIgnoreCase("test")) {
-            recepients = SpotAwardConfig.RECIPIENTS;
+            recepients = config.getRecipients();
         } else if (SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")) {
             recepients = Objects.requireNonNull(ExcelUtilities.getToEmailAddresses(orgTo));
         }

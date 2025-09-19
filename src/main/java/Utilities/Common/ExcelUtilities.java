@@ -151,7 +151,7 @@ public class ExcelUtilities {
     public static String[] getToEmailAddresses(String addressType){
 
         try {
-            File file = new File("./DataFiles/SpocData/Spoc_List.xls");
+            File file = new File("./DataFiles/SpocData/Spoc_Listtttt.xls");
             Workbook workbook = Workbook.getWorkbook(file);
             Sheet sheet;
 
