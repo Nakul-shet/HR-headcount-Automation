@@ -76,7 +76,7 @@ public class ExcelUtilities {
         int integerPart = (int) Math.floor(value);
         double decimalPart = value - integerPart;
 
-        if (decimalPart > 0.50) {
+        if (decimalPart >= 0.50) {
             return integerPart + 1;
         } else {
             return integerPart;
