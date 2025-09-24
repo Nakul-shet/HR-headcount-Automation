@@ -16,5 +16,7 @@ public interface AppConfig {
     String getSharepointLinkPractice();
     String getSharepointLinkOperations();
     String[] getRecipients();
+    String spot();
+    String distinguished();
 }
 

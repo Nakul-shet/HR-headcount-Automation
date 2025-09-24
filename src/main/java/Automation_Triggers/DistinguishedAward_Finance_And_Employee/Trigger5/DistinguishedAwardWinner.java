@@ -2,6 +2,8 @@ package Automation_Triggers.DistinguishedAward_Finance_And_Employee.Trigger5;
 
 import Utilities.Common.EmailBodyUtilities;
 import Utilities.Common.EmailSenderUtilities;
+import Utilities.Configuration.AppConfig;
+import Utilities.Configuration.MasterConfig;
 import Utilities.Configuration.SpotAwardConfig;
 import Utilities.Service.CommonEmailBodyBuilderService;
 import jxl.read.biff.BiffException;
@@ -15,6 +17,8 @@ import static Utilities.Common.ExcelUtilities.getAwardWinnersEmail;
 
 public class DistinguishedAwardWinner {
 
+    static AppConfig config = MasterConfig.getDataBasedOnActiveConfig(MasterConfig.activeEnvironment);
+
     public static void main(String[] args) throws BiffException, IOException {
 
         String emailBody = "";
@@ -23,11 +27,11 @@ public class DistinguishedAwardWinner {
         } catch (Exception e) {
             e.printStackTrace();
             }
-        String sender = SpotAwardConfig.SENDER_ID;
+        String sender = config.getSenderId();
         String subject = "Congratulations | Updates | Distinguished Award | Q" + EmailBodyUtilities.getCurrentQuarter() + " " + java.time.LocalDate.now().getYear();
         EmailSenderUtilities.sendEmail(
-                getAwardWinnersEmail(SpotAwardConfig.FILE_DISTINGUISHED_FINANCE_DATA),
-                getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor , "finance-cc"),
+                getAwardWinnersEmail(config.getFileDistinguishedFinanceData() + EmailBodyUtilities.getCurrentQuarter() + ".xls" , config.getLocalRunFor() , config.distinguished()),
+                getCCEmailBasedOnRunType(config.getLocalRunFor() , "finance-cc"),
                 sender,
                 subject,
                 emailBody,

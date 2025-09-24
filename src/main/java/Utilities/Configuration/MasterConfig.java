@@ -2,7 +2,7 @@ package Utilities.Configuration;
 
 public class MasterConfig {
 
-    public static final String activeEnvironment = "Test-HR";
+    public static final String activeEnvironment = "Test-Internal";
 
     public static AppConfig getDataBasedOnActiveConfig(String env) {
         return switch (env) {

@@ -213,8 +213,18 @@ public class ExcelUtilities {
         return data;
     }
 
-    public static String[] getAwardWinnersEmail(String fileName) throws BiffException, IOException {
-        File file = new File("./DataFiles/EmployeeFinanceData/" + fileName);
+    public static String[] getAwardWinnersEmail(String fileName , String env , String awardType) throws BiffException, IOException {
+
+        File file;
+
+        if(awardType.equals("spot") && env.equals("test")){
+             file = new File("./DataFiles/TestingFinanceData/Spot_Employee_Data.xls");
+        }else if(awardType.equals("distinguished") && env.equals("test")){
+             file = new File("./DataFiles/TestingFinanceData/Distinguished_Employee_Data.xls");
+        }else{
+             file = new File("./DataFiles/EmployeeFinanceDataaaaaa/" + fileName);
+        }
+
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(0);
         int mailIdColumn = -1;

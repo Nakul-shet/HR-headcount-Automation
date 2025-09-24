@@ -2,6 +2,8 @@ package Utilities.Service;
 
 import Utilities.Common.EmailBodyUtilities;
 import Utilities.Common.ExcelUtilities;
+import Utilities.Configuration.AppConfig;
+import Utilities.Configuration.MasterConfig;
 import Utilities.Configuration.SpotAwardConfig;
 import jxl.Cell;
 import jxl.Sheet;
@@ -18,8 +20,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class CommonEmailBodyBuilderService {
+    static AppConfig config = MasterConfig.getDataBasedOnActiveConfig(MasterConfig.activeEnvironment);
     public static String buildFinanceEmailBodyForSpot() throws Exception {
-        File file = new File("./DataFiles/EmployeeFinanceData/" + SpotAwardConfig.FILE_SPOT_FINANCE_DATA);
+
+        String previousMonthYearForFile = " "+LocalDate.now().minusMonths(1).getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                + (LocalDate.now().getYear() % 100);
+
+        File file = new File("./DataFiles/EmployeeFinanceData/" + config.getFileSpotFinanceData() + previousMonthYearForFile + ".xls");
 
         String previousMonthYear = LocalDate.now().minusMonths(1).getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH)
                 + " " + LocalDate.now().getYear();
@@ -82,7 +89,7 @@ public class CommonEmailBodyBuilderService {
     }
 
     public static String buildFinanceEmailBodyForDistinguished() throws Exception {
-        File file = new File("./DataFiles/EmployeeFinanceData/" + SpotAwardConfig.FILE_DISTINGUISHED_FINANCE_DATA);
+        File file = new File("./DataFiles/EmployeeFinanceData/" + config.getFileDistinguishedFinanceData() + EmailBodyUtilities.getCurrentQuarter() + ".xls");
 
         List<List<String>> tableData = ExcelUtilities.readExcelData(file);
         String htmlTable = EmailBodyUtilities.generateHtmlTable(tableData);

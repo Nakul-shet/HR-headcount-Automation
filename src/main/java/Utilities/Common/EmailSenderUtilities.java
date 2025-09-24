@@ -38,8 +38,15 @@ public class EmailSenderUtilities {
 
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(sender));
-            for (String recipient : recipients) {
-                message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+
+            if(subject.contains("Congratulations")){
+                for (String recipient : recipients) {
+                    message.addRecipient(Message.RecipientType.BCC, new InternetAddress(recipient));
+                }
+            }else{
+                for (String recipient : recipients) {
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+                }
             }
 
             if (ccRecipients != null) {
@@ -56,10 +63,12 @@ public class EmailSenderUtilities {
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(textPart);
 
-//            MimeBodyPart attachmentPart = new MimeBodyPart();
-//            attachmentPart.attachFile("C:\\Users\\kmk\\OneDrive - ALLEGIS GROUP\\Documents\\KARTHIK-M-K\\HR-headcount-Automation\\DataFiles\\Pluxee card activation processes.eml"); // or .pdf, .txt, etc.
-//            attachmentPart.setFileName("Pluxee Card Activation Processes.eml"); // optional, controls download name
-//            multipart.addBodyPart(attachmentPart);
+            if(subject.contains("Congratulations")){
+                MimeBodyPart attachmentPart = new MimeBodyPart();
+                attachmentPart.attachFile(System.getProperty("user.dir") + "\\DataFiles\\Pluxee card activation processes.eml"); // or .pdf, .txt, etc.
+                attachmentPart.setFileName("Pluxee Card Activation Processes.eml"); // optional, controls download name
+                multipart.addBodyPart(attachmentPart);
+            }
 
             message.setContent(multipart);
 
@@ -152,6 +161,8 @@ public class EmailSenderUtilities {
             System.out.println("Email sent successfully to " + Arrays.toString(recipients));
         } catch (MessagingException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
