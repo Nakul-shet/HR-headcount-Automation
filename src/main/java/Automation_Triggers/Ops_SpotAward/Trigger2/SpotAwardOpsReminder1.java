@@ -1,5 +1,7 @@
 package Automation_Triggers.Ops_SpotAward.Trigger2;
 
+import Utilities.Configuration.AppConfig;
+import Utilities.Configuration.MasterConfig;
 import Utilities.Configuration.SpotAwardConfig;
 import Utilities.Common.EmailSenderUtilities;
 import Utilities.Service.SpotAwardOperationsEmailBodyBuilderService;
@@ -11,6 +13,7 @@ import static Utilities.Common.EmailSenderUtilities.getCCEmailBasedOnRunType;
 import static Utilities.Common.EmailSenderUtilities.getToEmailBasedOnRunType;
 
 public class SpotAwardOpsReminder1 {
+    static AppConfig config = MasterConfig.getDataBasedOnActiveConfig(MasterConfig.activeEnvironment);
     public static void main(String[] args) {
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(new ByteArrayOutputStream()));
@@ -22,11 +25,11 @@ public class SpotAwardOpsReminder1 {
         } finally {
             System.setOut(originalOut);
         }
-        String sender = SpotAwardConfig.SENDER_ID;
+        String sender = config.getSenderId();
         String subject = "Reminder: Nominate or Regret! - Spot Awards " + java.time.LocalDate.now().getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH) + " " + java.time.LocalDate.now().getYear() + " - Operational Support";
         EmailSenderUtilities.sendEmail(
-                getToEmailBasedOnRunType(SpotAwardConfig.localRunFor, "op-to"),
-                getCCEmailBasedOnRunType(SpotAwardConfig.localRunFor, "op-cc"),
+                getToEmailBasedOnRunType(config.getLocalRunFor(), "op-to"),
+                getCCEmailBasedOnRunType(config.getLocalRunFor(), "op-cc"),
                 sender,
                 subject,
                 emailBody,
