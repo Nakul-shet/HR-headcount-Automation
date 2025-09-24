@@ -43,10 +43,10 @@ public class EmailBodyUtilities {
                 .append("<p style='margin: 0; line-height: 1.5;'>Thanks & Regards,</p>")
                 .append("<p style='margin: 5px 0; line-height: 1.5;'><strong>TGS India HR</strong></p>")
                 .append("<img src='data:image/png;base64,")
-                .append(getBase64Image("/src/main/resources/signature/TGSSignature1.jpg"))
+                .append(getBase64Image("/src/main/resources/Signature/TGSSignature1.jpg"))
                 .append("' alt='Company Logo' width='510' height='55' style='margin-bottom: 5px;'><br>")
                 .append("<img src='data:image/png;base64,")
-                .append(getBase64Image("/src/main/resources/signature/TGSSignature2.png"))
+                .append(getBase64Image("/src/main/resources/Signature/TGSSignature2.png"))
                 .append("' alt='Company Logo' width='600' height='26' style='margin-bottom: 10px;'><br>")
                 .append("</div>")
                 .toString();
