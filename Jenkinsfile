@@ -21,13 +21,14 @@ pipeline {
  
         stage('Update MasterConfig.java with environment') {
             steps {
-                sh '''
-                sed -i 's|public static final String activeEnvironment = ".*";|public static final String activeEnvironment = "${ENVIRONMENT}";|' src/main/java/Utilities/Configuration/MasterConfig.java
-                echo "✅ Updated environment to ${ENVIRONMENT}"
-                grep "activeEnvironment" src/main/java/Utilities/Configuration/MasterConfig.java
-                '''
+                sh """
+                    sed -i 's|public static final String activeEnvironment = ".*";|public static final String activeEnvironment = "${ENVIRONMENT}";|' src/main/java/Utilities/Configuration/MasterConfig.java
+                    echo "✅ Updated environment to ${ENVIRONMENT}"
+                    grep "activeEnvironment" src/main/java/Utilities/Configuration/MasterConfig.java
+                """
             }
         }
+
  
         stage('Build with Maven') {
             steps {
