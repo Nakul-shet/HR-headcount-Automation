@@ -65,7 +65,7 @@ public class EmailSenderUtilities {
 
             if(subject.contains("Congratulations")){
                 MimeBodyPart attachmentPart = new MimeBodyPart();
-                attachmentPart.attachFile(System.getProperty("user.dir") + "\\DataFiles\\Pluxee card activation processes.eml"); // or .pdf, .txt, etc.
+                attachmentPart.attachFile(System.getProperty("user.dir") + "//DataFiles//Pluxee card activation processes.eml"); // or .pdf, .txt, etc.
                 attachmentPart.setFileName("Pluxee Card Activation Processes.eml"); // optional, controls download name
                 multipart.addBodyPart(attachmentPart);
             }
