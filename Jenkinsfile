@@ -16,7 +16,7 @@ pipeline {
                    'Spot Award Reminder 2 - Operations',
 
                    'Spot Award Finance - Practice & Operations',
-                   'Spot Award Final Mail - Employees'
+                   'Spot Award Final Mail - Employees',
 
                     'Distinguished Award Eligibility - Practice',
                     'Distinguished Award Eligibility - Operations',
