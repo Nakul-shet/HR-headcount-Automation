@@ -3,7 +3,7 @@ pipeline {
  
     parameters {
         choice(name: 'ENVIRONMENT',
-               choices: ['Test-HR', 'Test-Internal'],
+               choices: ['Test-HR', 'Test-Internal', 'Production'],
                description: 'Select environment')
 
         choice(name: 'TEST_TO_RUN',

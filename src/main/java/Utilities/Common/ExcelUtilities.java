@@ -151,7 +151,7 @@ public class ExcelUtilities {
     public static String[] getToEmailAddresses(String addressType){
 
         try {
-            File file = new File("./DataFiles/SpocData/Spoc_Listtttt.xls");
+            File file = new File("./DataFiles/SpocData/Spoc_List.xls");
             Workbook workbook = Workbook.getWorkbook(file);
             Sheet sheet;
 
@@ -222,7 +222,7 @@ public class ExcelUtilities {
         }else if(awardType.equals("distinguished") && env.equals("test")){
              file = new File("./DataFiles/TestingFinanceData/Distinguished_Employee_Data.xls");
         }else{
-             file = new File("./DataFiles/EmployeeFinanceDataaaaaa/" + fileName);
+             file = new File("./DataFiles/EmployeeFinanceData/" + fileName);
         }
 
         Workbook workbook = Workbook.getWorkbook(file);

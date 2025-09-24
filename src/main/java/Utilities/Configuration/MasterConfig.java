@@ -8,6 +8,7 @@ public class MasterConfig {
         return switch (env) {
             case "Test-Internal" -> new TestInternalConfig();
             case "Test-HR" -> new TestHRConfig();
+            case "Production" -> new ProductionConfig();
             default -> throw new IllegalArgumentException("Unknown environment: " + env);
         };
     }
