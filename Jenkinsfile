@@ -12,10 +12,21 @@ pipeline {
                    'Spot Award Eligibility - Operations',
                    'Spot Award Reminder 1 - Practice',
                    'Spot Award Reminder 1 - Operations',
-		   'Spot Award Reminder 2 - Practice',
+		           'Spot Award Reminder 2 - Practice',
                    'Spot Award Reminder 2 - Operations',
+
                    'Spot Award Finance - Practice & Operations',
                    'Spot Award Final Mail - Employees'
+
+                    'Distinguished Award Eligibility - Practice',
+                    'Distinguished Award Eligibility - Operations',
+                    'Distinguished Award Reminder 1 - Practice',
+                    'Distinguished Award Reminder 1 - Operations',
+                    'Distinguished Award Reminder 2 - Practice',
+                    'Distinguished Award Reminder 2 - Operations',
+
+                    'Distinguished Award Finance - Practice & Operations',
+                    'Distinguished Award Final Mail - Employees'
                ],
                description: 'Select which test/automation to run')
     }
@@ -59,6 +70,13 @@ pipeline {
                         'Spot Award Reminder 1 - Operations': 'Automation_Triggers.Ops_SpotAward.Trigger2.SpotAwardOpsReminder1',
                         'Spot Award Reminder 2 - Practice': 'Automation_Triggers.Practice_SpotAward.Trigger3.SpotAwardPracticeReminder2',
                         'Spot Award Reminder 2 - Operations': 'Automation_Triggers.Ops_SpotAward.Trigger3.SpotAwardOpsReminder2'
+
+                        'Distinguished Award Eligibility - Practice' : 'Automation_Triggers.Practice_DistinguishedAward.Trigger1.DistinguishedAwardPracticeEligibility',
+                        'Distinguished Award Eligibility - Operations' : 'Automation_Triggers.Ops_DistinguishedAward.Trigger1.DistinguishedAwardOpsEligibility',
+                        'Distinguished Award Reminder 1 - Practice' : 'Automation_Triggers.Practice_DistinguishedAward.Trigger2.DistinguishedAwardPracticeReminder1',
+                        'Distinguished Award Reminder 1 - Operations' : 'Automation_Triggers.Ops_DistinguishedAward.Trigger2.DistinguishedAwardOpsReminder1',
+                        'Distinguished Award Reminder 2 - Practice' : 'Automation_Triggers.Practice_DistinguishedAward.Trigger3.DistinguishedAwardPracticeReminder2',
+                        'Distinguished Award Reminder 2 - Operations' : 'Automation_Triggers.Ops_DistinguishedAward.Trigger3.DistinguishedAwardOpsReminder2',
                     ]
 
                     def selectedMainClass = mainClassMap[params.TEST_TO_RUN]
