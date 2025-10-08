@@ -181,9 +181,9 @@ public class EmailSenderUtilities {
     public static String[] getCCEmailBasedOnRunType(String runType, String orgCC) {
         String[] cc = new String[0];
         if (runType.equalsIgnoreCase("test")) {
-            cc = null;
+            cc = new String[]{"nshet@teksystems.com", "kmk@teksystems.com"};
         } else if (SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")) {
-            cc = ExcelUtilities.getToEmailAddresses(orgCC);
+            cc = Objects.requireNonNull(ExcelUtilities.getToEmailAddresses(orgCC));
         }
         return cc;
     }
