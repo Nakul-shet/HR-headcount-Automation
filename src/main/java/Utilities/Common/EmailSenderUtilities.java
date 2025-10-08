@@ -172,7 +172,7 @@ public class EmailSenderUtilities {
         String[] recepients = new String[0];
         if (runType.equalsIgnoreCase("test")) {
             recepients = config.getRecipients();
-        } else if (SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")) {
+        } else if (config.getLocalRunFor().equalsIgnoreCase("prod")) {
             recepients = Objects.requireNonNull(ExcelUtilities.getToEmailAddresses(orgTo));
         }
         return recepients;
@@ -181,8 +181,8 @@ public class EmailSenderUtilities {
     public static String[] getCCEmailBasedOnRunType(String runType, String orgCC) {
         String[] cc = new String[0];
         if (runType.equalsIgnoreCase("test")) {
-            cc = new String[]{"nshet@teksystems.com", "kmk@teksystems.com"};
-        } else if (SpotAwardConfig.localRunFor.equalsIgnoreCase("prod")) {
+            cc = null;
+        } else if (config.getLocalRunFor().equalsIgnoreCase("prod")) {
             cc = Objects.requireNonNull(ExcelUtilities.getToEmailAddresses(orgCC));
         }
         return cc;
