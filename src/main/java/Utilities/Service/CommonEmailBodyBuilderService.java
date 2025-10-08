@@ -78,7 +78,7 @@ public class CommonEmailBodyBuilderService {
                 .append("2. The SPOT Awards certificates are shared with L1 Managers for your RMs reference.<br>")
                 .append("3. Post the certificate in LinkedIn and tag <b>TEKsystems Global Services In India</b>.<br>")
                 .append("4. Amount is not included in the Pluxee card or not having the card; ")
-                .append("For additional credit related queries, contact <a href='mailto:kiskala@teksystems.com'>kiskala@teksystems.com</a>.<br>");
+                .append("For additional credit related queries, contact <a href='mailto:veperam@teksystems.com'>veperam@teksystems.com</a>.<br>");
 
         htmlBuilder.append("</div>");
         htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
@@ -139,7 +139,7 @@ public class CommonEmailBodyBuilderService {
                 .append("2. The Distinguished Awards certificates are shared with L1 Managers for your RMs reference.<br>")
                 .append("3. Post the certificate in LinkedIn and tag <b>TEKsystems Global Services In India</b>.<br>")
                 .append("4. Amount is not included in the Pluxee card or not having the card; ")
-                .append("For additional credit related queries, contact <a href='mailto:kiskala@teksystems.com'>kiskala@teksystems.com</a>.<br>")
+                .append("For additional credit related queries, contact <a href='mailto:veperam@teksystems.com'>veperam@teksystems.com</a>.<br>")
                 .append("5. Attached the mail which consists the details and process of Pluxee card in case of the following( new card/KYC related/Deactivated)");
 
 
