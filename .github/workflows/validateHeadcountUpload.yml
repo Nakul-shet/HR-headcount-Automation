@@ -1,0 +1,38 @@
+name: Validate Headcount upload
+
+on:
+  push:
+    paths:
+      - 'DataFiles/EligibilityData/**'  # only run if something changes in this folder
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate uploaded files
+        run: |
+          echo "🔍 Checking uploaded files..."
+          invalid_files=0
+
+          # List files changed in this push inside DataFiles/EligibilityData/
+          for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'DataFiles/EligibilityData/**'); do
+            echo "Found: $file"
+          
+            # Allow only two specific file paths
+            if [[ "$file" != "DataFiles/EligibilityData/Ops_Eligibility.xls" && "$file" != "DataFiles/EligibilityData/Practice_Eligibility.xls" ]]; then
+              echo "❌ Invalid file detected: $file"
+              invalid_files=1
+            else
+              echo "✅ Valid file: $file"
+            fi
+          done
+
+          if [ $invalid_files -ne 0 ]; then
+            echo "❌ Validation failed: One or more files are invalid."
+            exit 1
+          else
+            echo "✅ Validation successful: All files are valid."
+          fi
