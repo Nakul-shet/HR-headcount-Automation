@@ -3,7 +3,7 @@ name: Validate Headcount upload
 on:
   push:
     paths:
-      - 'DataFiles/EligibilityData/**'  # only run if something changes in this folder
+      - 'DataFiles/EligibilityData/**'  # run only when something changes here
 
 jobs:
   validate:
@@ -11,19 +11,37 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # fetch full history for accurate diff
+
+      - name: Identify changed files
+        id: files
+        run: |
+          echo "🔍 Finding changed files in this push..."
+          # Detect files changed (added/modified/renamed) in this push
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD -- 'DataFiles/EligibilityData/**' || true)
+
+          # Fallback for first commits or GitHub UI uploads
+          if [ -z "$CHANGED_FILES" ]; then
+            CHANGED_FILES=$(git ls-tree -r --name-only HEAD 'DataFiles/EligibilityData/' || true)
+          fi
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
 
       - name: Validate uploaded files
         run: |
-          echo "🔍 Checking uploaded files..."
+          echo "🔍 Validating uploaded files..."
           invalid_files=0
 
-          # List files changed in this push inside DataFiles/EligibilityData/
-          for file in $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'DataFiles/EligibilityData/**'); do
+          # Loop through the detected changed files
+          for file in ${{ steps.files.outputs.changed_files }}; do
             echo "Found: $file"
           
-            # Allow only two specific file paths
+            # Allow only these two exact files
             if [[ "$file" != "DataFiles/EligibilityData/Ops_Eligibility.xls" && "$file" != "DataFiles/EligibilityData/Practice_Eligibility.xls" ]]; then
-              echo "❌ Invalid file detected: $file"
+              echo "❌ Invalid file name or path: $file"
               invalid_files=1
             else
               echo "✅ Valid file: $file"
@@ -31,8 +49,8 @@ jobs:
           done
 
           if [ $invalid_files -ne 0 ]; then
-            echo "❌ Validation failed: One or more files are invalid."
+            echo "❌ Validation failed — only Ops_Eligibility.xls and Practice_Eligibility.xls are allowed."
             exit 1
           else
-            echo "✅ Validation successful: All files are valid."
+            echo "✅ Validation passed — all uploaded files are valid."
           fi
