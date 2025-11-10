@@ -53,7 +53,8 @@ public class CommonEmailBodyBuilderService {
         LocalDate today = LocalDate.now();
         int month =today.getMonthValue();
         int year = today.getYear();
-        LocalDate statementDate = LocalDate.of(year, month, 10);
+        int day = today.getDayOfMonth();
+        LocalDate statementDate = LocalDate.of(year, month, day+1);
 
         String formattedStatementDate = statementDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
@@ -114,7 +115,8 @@ public class CommonEmailBodyBuilderService {
         LocalDate today = LocalDate.now();
         int month = today.getMonthValue();
         int year = today.getYear();
-        LocalDate statementDate = LocalDate.of(year, month, 14);
+        int day = today.getDayOfMonth();
+        LocalDate statementDate = LocalDate.of(year, month, day+1);
 
         String formattedStatementDate = statementDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
