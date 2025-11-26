@@ -41,7 +41,7 @@ public class DistinguishedAwardPracticeEmailBodyBuilderService {
                 .append(" Eligibility</th>");
         htmlBuilder.append("</tr>");
 
-        htmlBuilder.append(ExcelUtilities.readHeadCountData());
+        htmlBuilder.append(ExcelUtilities.readHeadCountData("Practice_Distinguished"));
         htmlBuilder.append("</table>");
 
         htmlBuilder.append("<ul style='font-family:Arial,sans-serif; font-size:14px; color:#333;'>")

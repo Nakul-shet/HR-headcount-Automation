@@ -15,11 +15,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ExcelUtilities {
-    public static String readHeadCountData() throws Exception {
+    public static String readHeadCountData(String sheetName) throws Exception {
         StringBuilder htmlBuilder = new StringBuilder();
-        File file = new File("./DataFiles/EligibilityData/" + SpotAwardConfig.FILE_PRACTICE_EILIGIBILITY_DATA);
+        File file = new File("./DataFiles/EligibilityData/" + SpotAwardConfig.FILE_EILIGIBILITY_DATA);
         Workbook workbook = Workbook.getWorkbook(file);
-        Sheet sheet = workbook.getSheet(0);
+        int sheetNumber = sheetName.equalsIgnoreCase("Practice_Spot") ? 0 : 1;
+        Sheet sheet = workbook.getSheet(sheetNumber);
         int mergedCellRow = -1;
         int mergedCellCol = -1;
         for (Range range : sheet.getMergedCells()) {
@@ -87,9 +88,9 @@ public class ExcelUtilities {
 
         StringBuilder htmlBuilder = new StringBuilder();
 
-        File file = new File("./DataFiles/EligibilityData/" + SpotAwardConfig.FILE_OPS_ELIGIBILITY_DATA);
+        File file = new File("./DataFiles/EligibilityData/" + SpotAwardConfig.FILE_EILIGIBILITY_DATA);
         Workbook workbook = Workbook.getWorkbook(file);
-        int sheetNumber = sheetName.equalsIgnoreCase("Ops_Spot") ? 0 : 1;
+        int sheetNumber = sheetName.equalsIgnoreCase("Ops_Spot") ? 2 : 3;
         Sheet sheet = workbook.getSheet(sheetNumber);
         int row = 1;
         while (row < sheet.getRows()) {
