@@ -1,0 +1,114 @@
+
+name: Awards Automation Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        description: Select environment
+        type: choice
+        options:
+          - 'Test-HR'
+          - 'Test-Internal'
+          - 'Production'
+        default: 'Test-HR'
+      TEST_TO_RUN:
+        description: Select which test/automation to run
+        type: choice
+        options:
+          - 'Spot Award Eligibility - Practice'
+          - 'Spot Award Reminder 1 - Practice'
+          - 'Spot Award Reminder 2 - Practice'
+          - 'Spot Award Eligibility - Operations'
+          - 'Spot Award Reminder 1 - Operations'
+          - 'Spot Award Reminder 2 - Operations'
+          - 'Spot Award Finance - Practice & Operations'
+          - 'Spot Award Final Mail - Employees'
+          - 'Distinguished Award Eligibility - Practice'
+          - 'Distinguished Award Reminder 1 - Practice'
+          - 'Distinguished Award Reminder 2 - Practice'
+          - 'Distinguished Award Eligibility - Operations'
+          - 'Distinguished Award Reminder 1 - Operations'
+          - 'Distinguished Award Reminder 2 - Operations'
+          - 'Distinguished Award Finance - Practice & Operations'
+          - 'Distinguished Award Final Mail - Employees'
+        default: 'Spot Award Eligibility - Practice'
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Show selections
+        run: |
+          echo "✅ Updated environment to ${{ inputs.ENVIRONMENT }}"
+          echo "✅ Selected test to run: ${{ inputs.TEST_TO_RUN }}"
+
+      - name: Update MasterConfig.java with environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's|public static final String activeEnvironment = ".*";|public static final String activeEnvironment = "${{ inputs.ENVIRONMENT }}";|' src/main/java/Utilities/Configuration/MasterConfig.java
+          echo "After update:"
+          grep "activeEnvironment" src/main/java/Utilities/Configuration/MasterConfig.java
+
+      - name: Build with Maven
+        run: mvn -B -q package --file pom.xml
+
+      - name: Determine main class
+        id: mainclass
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ inputs.TEST_TO_RUN }}" in
+            'Spot Award Eligibility - Practice') MAIN_CLASS='Automation_Triggers.Practice_SpotAward.Trigger1.SpotAwardPracticeEligibility' ;;
+            'Spot Award Eligibility - Operations') MAIN_CLASS='Automation_Triggers.Ops_SpotAward.Trigger1.SpotAwardOpsEligibility' ;;
+            'Spot Award Reminder 1 - Practice') MAIN_CLASS='Automation_Triggers.Practice_SpotAward.Trigger2.SpotAwardPracticeReminder1' ;;
+            'Spot Award Reminder 1 - Operations') MAIN_CLASS='Automation_Triggers.Ops_SpotAward.Trigger2.SpotAwardOpsReminder1' ;;
+            'Spot Award Reminder 2 - Practice') MAIN_CLASS='Automation_Triggers.Practice_SpotAward.Trigger3.SpotAwardPracticeReminder2' ;;
+            'Spot Award Reminder 2 - Operations') MAIN_CLASS='Automation_Triggers.Ops_SpotAward.Trigger3.SpotAwardOpsReminder2' ;;
+            'Spot Award Finance - Practice & Operations') MAIN_CLASS='Automation_Triggers.SpotAward_Finance_And_Employee.Trigger4.SpotAwardFinance' ;;
+            'Spot Award Final Mail - Employees') MAIN_CLASS='Automation_Triggers.SpotAward_Finance_And_Employee.Trigger5.SpotAwardWinner' ;;
+            'Distinguished Award Eligibility - Practice') MAIN_CLASS='Automation_Triggers.Practice_DistinguishedAward.Trigger1.DistinguishedAwardPracticeEligibility' ;;
+            'Distinguished Award Eligibility - Operations') MAIN_CLASS='Automation_Triggers.Ops_DistinguishedAward.Trigger1.DistinguishedAwardOpsEligibility' ;;
+            'Distinguished Award Reminder 1 - Practice') MAIN_CLASS='Automation_Triggers.Practice_DistinguishedAward.Trigger2.DistinguishedAwardPracticeReminder1' ;;
+            'Distinguished Award Reminder 1 - Operations') MAIN_CLASS='Automation_Triggers.Ops_DistinguishedAward.Trigger2.DistinguishedAwardOpsReminder1' ;;
+            'Distinguished Award Reminder 2 - Practice') MAIN_CLASS='Automation_Triggers.Practice_DistinguishedAward.Trigger3.DistinguishedAwardPracticeReminder2' ;;
+            'Distinguished Award Reminder 2 - Operations') MAIN_CLASS='Automation_Triggers.Ops_DistinguishedAward.Trigger3.DistinguishedAwardOpsReminder2' ;;
+            'Distinguished Award Finance - Practice & Operations') MAIN_CLASS='Automation_Triggers.DistinguishedAward_Finance_And_Employee.Trigger4.DistinguishedAwardFinance' ;;
+            'Distinguished Award Final Mail - Employees') MAIN_CLASS='Automation_Triggers.DistinguishedAward_Finance_And_Employee.Trigger5.DistinguishedAwardWinner' ;;
+            *) echo "::error::❌ Unknown test selection: ${{ inputs.TEST_TO_RUN }}"; exit 1 ;;
+          esac
+          echo "main_class=$MAIN_CLASS" >> "$GITHUB_OUTPUT"
+
+      - name: Run Selected Test
+        run: |
+          echo "🚀 Running ${{ inputs.TEST_TO_RUN }} on ${{ inputs.ENVIRONMENT }} environment"
+          mvn -q exec:java -Dexec.mainClass="${{ steps.mainclass.outputs.main_class }}"
+          echo "✅ Completed execution of ${{ inputs.TEST_TO_RUN }}"
+
+      - name: Post status (always)
+        if: always()
+        run: |
+          echo "Pipeline completed for Environment: ${{ inputs.ENVIRONMENT }}, Test: ${{ inputs.TEST_TO_RUN }}"
+
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            target/surefire-reports
+            **/target/surefire-reports
+            **/target/*.log
+          if-no-files-found: ignore
