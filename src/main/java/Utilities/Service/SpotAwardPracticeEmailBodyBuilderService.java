@@ -36,7 +36,7 @@ public class SpotAwardPracticeEmailBodyBuilderService {
         htmlBuilder.append("</tr>");
 
 
-        htmlBuilder.append(ExcelUtilities.readHeadCountData());
+        htmlBuilder.append(ExcelUtilities.readHeadCountData("Practice_Spot"));
         htmlBuilder.append("</table>");
         htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
         htmlBuilder.append("</body></html>");
@@ -106,6 +106,7 @@ public class SpotAwardPracticeEmailBodyBuilderService {
         htmlBuilder.append("📧 <b><a href='mailto:TGSHRIndiaOps@teksystems.com'>TGSHRIndiaOps@teksystems.com</a></b></p>");
 
         htmlBuilder.append("<p><b>Let’s make those nominations count</b> (before the HR ops team starts chasing you with memes)! 😄</p>");
+        htmlBuilder.append(EmailBodyUtilities.nominateEmployeesButton(SpotAwardConfig.ORG_PRACTICE));
 
         htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
         htmlBuilder.append("</body></html>");

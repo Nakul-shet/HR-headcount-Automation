@@ -105,6 +105,7 @@ public class SpotAwardOperationsEmailBodyBuilderService {
         htmlBuilder.append("📧 <b><a href='mailto:TGSHRIndiaOps@teksystems.com'>TGSHRIndiaOps@teksystems.com</a></b></p>");
 
         htmlBuilder.append("<p><b>Let’s make those nominations count</b> (before the HR ops team starts chasing you with memes)! 😄</p>");
+        htmlBuilder.append(EmailBodyUtilities.nominateEmployeesButton(SpotAwardConfig.ORG_OPERATIONS));
 
         htmlBuilder.append(EmailBodyUtilities.getEmailSignature());
         htmlBuilder.append("</body></html>");
